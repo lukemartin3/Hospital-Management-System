@@ -47,7 +47,3 @@ for row in cursor.execute('select description, done from todoitem'):
         print(row[0], "is done")
     else:
         print(row[0], "is NOT done")
-
-res = [lis[1] for lis in rows]
-for i in res:
-    assert i == 1, "is NOT done"
