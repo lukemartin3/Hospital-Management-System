@@ -47,3 +47,5 @@ for row in cursor.execute('select description, done from todoitem'):
         print(row[0], "is done")
     else:
         print(row[0], "is NOT done")
+
+# edit for recording
