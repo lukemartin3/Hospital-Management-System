@@ -8,7 +8,7 @@ sonarqube-check:
 
   variables:
 
-    SONAR_TOKEN: 4031fac18234e17ffefade6b2648d57105962a4f
+    SONAR_TOKEN: 2b5fb12f325d9988379c62f4315163567e017295
 
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
 
