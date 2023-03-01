@@ -7,7 +7,7 @@ pw = getpass.getpass("Enter password: ")
 try:
     connection = mysql.connector.connect(user='root', password=pw,
                               host='127.0.0.1',
-                              database='electronics',
+                              database='users',
                               auth_plugin='mysql_native_password')
     if connection.is_connected():
         db_Info = connection.get_server_info()
