@@ -3,17 +3,18 @@ import mysql.connector
 from tkinter import *
 import getpass
 
-# db_pw = getpass.getpass("Enter database password: ")
+db_pw = getpass.getpass("Enter database password: ")
 __HOST = '127.0.0.1'
 __USERNAME = 'root'
-__PASSWORD = "5crNoOdN1331"
+__PASSWORD = db_pw
 __DATABASE = 'users'
 
 con = mysql.connector.connect(host=__HOST,user=__USERNAME,password=__PASSWORD,database=__DATABASE)
 mycursor = con.cursor()
 
+####################
+# CONFIRM LOGIN
 def connect_database(username,password):
-    #append password and username in the empty list below for later checkings
     mypassword_queue =[]
     sql_query = "SELECT * FROM logon WHERE username ='%s' AND password ='%s'" % (username, password)
 
@@ -36,6 +37,8 @@ def connect_database(username,password):
         incrow = tk.Label(root, text="Username or Password is incorrect.", )
         incrow.place(x=100, y=90)
 
+####################
+# GET USERNAME/PASSWORD FOR LOGIN
 def submitact():
     user = Username.get()
     passw = password.get()
@@ -43,7 +46,8 @@ def submitact():
     print(f"The name entered by you is {user} {passw}")
     connect_database(user, passw)
 
-
+####################
+# CHARTING HOME PAGE 
 def logged_in():
     tt = tk.Tk()
     tt.geometry("900x750")
@@ -51,6 +55,8 @@ def logged_in():
     newfrstrow = tk.Label(tt, text="Login successful! Welcome to Patient Charting.", )
     newfrstrow.place(x=100, y=50)
 
+####################
+# ACCOUNT CREATION CLASS
 class Creation: 
 
     def create_account(self):
@@ -97,21 +103,12 @@ class Creation:
             con.commit()
             self.ca.destroy()
 
-def submitact():
-    user = Username.get()
-    passw = password.get()
-
-    print(f"The name entered by you is {user} {passw}")
-    connect_database(user, passw)
-
-
-
-
+####################
+# HOME PAGE 
 root = tk.Tk()
 root.geometry("900x750")
 root.title("DBMS Login Page")
 
-# Defining the first row
 lblfrstrow = tk.Label(root, text="Username -", )
 lblfrstrow.place(x=50, y=20)
 
@@ -124,16 +121,18 @@ lblsecrow.place(x=50, y=50)
 password = tk.Entry(root, width=35)
 password.place(x=150, y=50, width=100)
 
-
 submitbtn = tk.Button(root, text="Login",
                     bg='blue', command=submitact)
 submitbtn.place(x=150, y=135, width=55)
 
+####################
+# ACCOUNT CREATION 
 crt = Creation()
 crt_button = tk.Button(root, text="Create Account",
                     bg='green', command = crt.create_account)
 crt_button.place(x = 150, y = 170, width = 90)
 
+####################
+# ROOT
 root.mainloop()
-
 con.close()
