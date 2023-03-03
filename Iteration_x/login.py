@@ -75,13 +75,13 @@ class Creation:
         ca_pass = tk.Label(self.ca, text="New password -")
         ca_pass.place(x=50, y=50)
 
-        self.new_pass = tk.Entry(self.ca, width=35)
+        self.new_pass = tk.Entry(self.ca, show="*", width=35)
         self.new_pass.place(x=200, y=50, width=100)
 
         ca_conf = tk.Label(self.ca, text="Confirm password -")
         ca_conf.place(x=50, y=80)
 
-        self.confirm_pass = tk.Entry(self.ca, width=35)
+        self.confirm_pass = tk.Entry(self.ca, show="*", width=35)
         self.confirm_pass.place(x=200, y=80, width=100)
 
         submitbtn = tk.Button(self.ca, text="Create",
