@@ -2,6 +2,9 @@ import tkinter as tk
 import mysql.connector
 from tkinter import *
 import getpass
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 db_pw = getpass.getpass("Enter database password: ")
 __HOST = '127.0.0.1'
@@ -31,7 +34,8 @@ def connect_database(username,password):
         print('Login Successful.')
         root.destroy()
         logged_in()
-
+    elif username in [x for i, x in enumerate(myresults) if i % 2 == 0]:
+        print("Your password has been reset. Please check your email for a new password.")
     else:
         print('ERROR: Username or Password is incorrect.')
         incrow = tk.Label(root, text="Username or Password is incorrect.", )
@@ -103,6 +107,68 @@ class Creation:
             con.commit()
             self.ca.destroy()
 
+#######################
+# FORGOT PASSWORD CLASS
+class ForgotPassword:
+
+    def __init__(self, master):
+        self.master = master
+        master.title("Forgot Password")
+
+        # Create widgets
+        self.email_label = tk.Label(master, text="Email:")
+        self.email_entry = tk.Entry(master, width=30)
+        self.new_password_label = tk.Label(master, text="New Password:")
+        self.new_password_entry = tk.Entry(master, show="*", width=30)
+        self.confirm_password_label = tk.Label(master, text="Confirm Password:")
+        self.confirm_password_entry = tk.Entry(master, show="*", width=30)
+        self.submit_button = tk.Button(master, text="Submit", command=self.submit)
+
+        # Layout widgets
+        self.email_label.grid(row=0, column=0)
+        self.email_entry.grid(row=0, column=1)
+        self.new_password_label.grid(row=1, column=0)
+        self.new_password_entry.grid(row=1, column=1)
+        self.confirm_password_label.grid(row=2, column=0)
+        self.confirm_password_entry.grid(row=2, column=1)
+        self.submit_button.grid(row=3, column=1)
+
+    def submit(self):
+        email = self.email_entry.get()
+        new_password = self.new_password_entry.get()
+        confirm_password = self.confirm_password_entry.get()
+
+        if new_password != confirm_password:
+            tk.messagebox.showerror("Error", "Passwords do not match.")
+        else:
+            # Update password in the database
+            sql_query = f"UPDATE logon SET password='{new_password}' WHERE email='{email}'"
+            mycursor.execute(sql_query)
+            con.commit()
+
+            # Send email with new password
+            sender_email = "your_email@example.com"  # Update this with your email address
+            sender_password = "your_password"  # Update this with your password
+            recipient_email = email
+            message = MIMEMultipart()
+            message['From'] = sender_email
+            message['To'] = recipient_email
+            message['Subject'] = "Password Reset Requested"
+            body = f"Dear user,\n\nYour password has been reset to:\n\n{new_password}\n\nPlease log in with this new password and change it immediately.\n\nBest regards"
+            message.attach(MIMEText(body, 'plain'))
+
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login(sender_email, sender_password)
+                smtp.send_message(message)
+
+            tk.messagebox.showinfo("Success", "Password reset. Please check your email for your new password.")
+            self.master.destroy()
+
+#################
+# FORGOT PASSWORD
+def forgot_password():
+    ForgotPassword((tk.Tk()))
+
 ####################
 # HOME PAGE 
 root = tk.Tk()
@@ -130,7 +196,13 @@ submitbtn.place(x=150, y=135, width=55)
 crt = Creation()
 crt_button = tk.Button(root, text="Create Account",
                     bg='green', command = crt.create_account)
-crt_button.place(x = 150, y = 170, width = 90)
+crt_button.place(x = 150, y = 170, width = 125)
+
+
+forgot_password_btn = tk.Button(root, text="Forgot Password?",
+                    bg='yellow', command=forgot_password)
+forgot_password_btn.place(x=150, y=220, width=140)
+
 
 ####################
 # ROOT
