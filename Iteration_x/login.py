@@ -118,7 +118,7 @@ Username.place(x=150, y=20, width=100)
 lblsecrow = tk.Label(root, text="Password -")
 lblsecrow.place(x=50, y=50)
 
-password = tk.Entry(root, width=35)
+password = tk.Entry(root, show="*", width=35)
 password.place(x=150, y=50, width=100)
 
 submitbtn = tk.Button(root, text="Login",
