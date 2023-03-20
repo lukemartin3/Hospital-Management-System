@@ -1,5 +1,9 @@
+<?php
+?>
+
 <!-- Login HTML Template sourced from https://www.w3schools.com/howto/howto_css_login_form.asp -->
 <!--Login html-->
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>

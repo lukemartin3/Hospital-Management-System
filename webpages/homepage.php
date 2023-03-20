@@ -1,3 +1,5 @@
+<?php
+?>
 <!--Homepage view for post-login-->
 <!DOCTYPE html>
 <html lang="en-US">
