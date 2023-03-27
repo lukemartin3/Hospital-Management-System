@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, session
 # Always use Flask.session instead of the Session object for direct access.
 from flask_session import Session
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -20,6 +21,20 @@ def login():
         session["user_name"] = request.form.get("name")
         return redirect("/")
     return render_template("login.html")
+
+@app.route("/register", methods=["POST", "GET"])
+def register_new_user():
+    if request.method == "POST":
+        # TODO: Database stuff
+        return redirect("/login")
+    return render_template("register.html")
+
+@app.route("/forgot-password", methods=["POST", "GET"])
+def forgot_password():
+    if request.method == "POST":
+        # TODO: Send email
+        return redirect("/")
+    return render_template("forgot-password.html")
 
 @app.route("/logout")
 def logout():
