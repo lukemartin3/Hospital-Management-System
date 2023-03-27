@@ -4,6 +4,7 @@
 <body>
    {% if session.user_name %}
    You are registered, {{ session.user_name }} <a href="/logout">logout</a>.<br>
+   Sign up for an <a href="/schedule-appointment">appointment</a><br>
    {% else %}
    You are not Registered. <a href="/login">login</a>.
    {% endif %}
