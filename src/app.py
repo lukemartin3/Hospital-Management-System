@@ -26,6 +26,12 @@ def logout():
     session["user_name"] = None
     return redirect("/")
 
+@app.route("/schedule-appointment", methods=["POST", "GET"])
+def schedule():
+    if not session.get("user_name"):
+        return redirect("/login")
+    return render_template("scheduling.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
 
