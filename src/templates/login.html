@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
 <body>
-  <h1> Login </h1>
-
-  <form action="/login" method="POST">
-      Username: <input placeholder="Name" autocomplete="off" type="text" name="name"><br>
-        Password: <input autocomplete="off" type="text" name="password"><br>
-      <input type="submit" name="Register">
-  </form>
-    <a href="/forgot-password">Forgot Your Password?</a><br>
-    <a href="/register">New User</a><br>
+    <h1>Login</h1>
+    <form action="{{url_for('login')}}" method="post">
+        <label>Username:</label>
+        <input placeholder="Name" type="text" name="username" id="username" required>
+        <label>Password:</label>
+        <input placeholder="password" type="text" name="password" id="password" required>
+        <input type="submit" value="login">
+    </form><br>
+    <li><a href="{{url_for('register_new_user')}}">Register</a></li><br>
+    <li><a href="{{url_for('forgot-password')}}">Forgot Your Password?</a></li><br>
 </body>
 </html>

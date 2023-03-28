@@ -20,9 +20,7 @@ mycursor = con.cursor()
 
 @app.route("/")
 def index():
-    if not session.get("user_name"):
-        return redirect("/login")
-    return render_template('welcome.html')
+    return render_template('index.html')
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -38,7 +36,7 @@ def login():
             return redirect(url_for('home'))
         else:
             msg="Incorrect username or password"
-    return render_template('index.html',msg=msg)
+    return render_template('login.html',msg=msg)
 
 @app.route("/register", methods=["POST", "GET"])
 def register_new_user():

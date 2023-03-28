@@ -1,18 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
 <body>
-    <h1>Login</h1>
-    <form action="{{url_for('login')}}" method="post">
-        <label>username</label>
-        <input type="text" name="username" id="username" required>
-        <label>password</label>
-        <input type="text" name="password" id="password" required>
-        <input type="submit" value="login">
-    </form><br>
-    <li><a href="{{url_for('register_new_user')}}">Register</a></li><br>
+   {% if session.user_name %}
+   You are registered, {{ session.user_name }} <a href="/logout">logout</a>.<br>
+   Sign up for an <a href="/schedule-appointment">appointment</a><br>
+   {% else %}
+   You are not Registered. <a href="/login">login</a>.
+   {% endif %}
 </body>
 </html>
