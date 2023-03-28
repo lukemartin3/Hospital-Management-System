@@ -5,15 +5,17 @@
     <title>Register New User</title>
 </head>
 <body>
-    <h1>Registration</h1>
+    <h1>Register a new account</h1>
     <li><a href="{{url_for('index')}}">Login</a></li>
     <form action="{{url_for('register_new_user')}}" method="post">
-        <label>username</label>
-        <input type="text" name="username" id="username" required><br><br>
-        <label>password</label>
-        <input type="text" name="password" id="password" required><br><br>
-        <label>confirm password</label>
-        <input type="text" name="confirm_password" id="confirm_password" required><br><br>
+        <label>Username: </label>
+        <input placeholder="Name" type="text" name="username" id="username" required><br><br>
+        <label>Email: </label>
+        <input placeholder="name@server.com" type="text" name="email" id="email" required><br><br>
+        <label>Password: </label>
+        <input placeholder="secure password" type="text" name="password" id="password" required><br><br>
+        <label>Repeat Password: </label>
+        <input placeholder="same password" type="text" name="password_confirm" id="password_confirm" required><br><br>
         <input type="submit" value="register_new_user">
     </form><br>
 </body>
