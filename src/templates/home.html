@@ -5,12 +5,16 @@
     <title>Home</title>
 </head>
 <body>
+   {% if session.user_name %}
     <h1>Home</h1>
+    <h2>Welcome!</h2>
+    You are registered, {{ session.user_name }} <br>
+   Sign up for an <a href="/schedule-appointment">appointment</a><br>
     <div>
-        <h2>Welcome!
-            <a href="{{url_for('logout')}}"></a>
-        </h2>
-    </div>
     <li><a href="{{url_for('logout')}}">Logout</a></li>
+    </div>
+   {% else %}
+   You are not registered. Log in <a href="{{url_for('login')}}">here</a>.
+   {% endif %}
 </body>
 </html>
