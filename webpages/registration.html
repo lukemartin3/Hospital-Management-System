@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+    <h1>Registration</h1>
+    <li><a href="{{url_for('index')}}">Login</a></li>
+    <form action="{{url_for('registration')}}" method="post">
+        <label>username</label>
+        <input type="text" name="username" id="username" required><br><br>
+        <label>password</label>
+        <input type="text" name="password" id="password" required><br><br>
+        <label>confirm password</label>
+        <input type="text" name="confirm_password" id="confirm_password" required><br><br>
+        <input type="submit" value="registration">
+    </form><br>
+</body>
+</html>
