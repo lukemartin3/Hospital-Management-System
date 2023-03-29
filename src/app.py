@@ -19,7 +19,7 @@ con = mysql.connector.connect(host=__HOST, user=__USERNAME, password=__PASSWORD,
 mycursor = con.cursor()
 
 @app.route("/")
-def index():
+def home():
     return render_template('home.html')
 
 @app.route("/login", methods=["POST", "GET"])
@@ -75,6 +75,8 @@ def logout():
 def schedule():
     if not session.get("user_name"):
         return redirect("/login")
+    # if request.method == "POST":
+    #
     return render_template("scheduling.html")
 
 if __name__ == "__main__":
