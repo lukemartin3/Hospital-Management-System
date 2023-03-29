@@ -75,8 +75,14 @@ def logout():
 def schedule():
     if not session.get("user_name"):
         return redirect("/login")
-    # if request.method == "POST":
-    #
+    if request.method == "POST":
+        date = request.form.get('date')
+        time = request.form.get('time')
+        notes = request.form.get('notes')
+        mycursor.execute('INSERT INTO appointments (username, date, time, notes) VALUES (%s, %s, %s, %s)',
+                         (session['username'], date, time, notes))
+        con.commit()
+        return render_template("home.html")
     return render_template("scheduling.html")
 
 if __name__ == "__main__":

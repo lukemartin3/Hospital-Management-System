@@ -1,7 +1,57 @@
 <!DOCTYPE html>
-
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register New Patient</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            width: 100%;
+        }
+        li {
+            float: right;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #111;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+    </style>
+</head>
 <body>
-    Register for appointments here.
+    <h1>Schedule an Appointment</h1>
+    <ul>
+        <li><a href="{{url_for('home')}}">Home</a></li>
+    </ul><br><br><br>
+    <form method="post" action="{{ url_for('schedule')}}">
+        <div>
+            <label for="date">Date</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+        </div><br>
+        <div>
+            <label for="time">Time</label>
+            <input type="time" class="form-control" id="time" name="time" required>
+        </div><br>
+        <div>
+            <label for="notes">Notes</label>
+            <textarea class="form-control" id="notes" name="notes"></textarea>
+        </div><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </body>
 </html>
