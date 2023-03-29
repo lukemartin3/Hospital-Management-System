@@ -3,17 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            width: 100%;
+        }
+        li {
+            float: right;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #111;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <h1>Login</h1>
+    <ul>
+        <li><a href="{{url_for('register_new_user')}}">Register</a></li>
+         <li><a href="{{url_for('forgot_password')}}">Forgot Your Password?</a></li>
+    </ul><br><br>
     <form action="{{url_for('login')}}" method="post">
         <label>Username:</label>
-        <input placeholder="Name" type="text" name="username" id="username" required>
+        <input placeholder="Name" type="text" name="username" id="username" required><br><br>
         <label>Password:</label>
-        <input placeholder="password" type="text" name="password" id="password" required>
+        <input placeholder="password" type="text" name="password" id="password" required><br><br>
         <input type="submit" value="login">
     </form><br>
-    <li><a href="{{url_for('register_new_user')}}">Register</a></li><br>
-    <li><a href="{{url_for('forgot_password')}}">Forgot Your Password?</a></li><br>
 </body>
 </html>
