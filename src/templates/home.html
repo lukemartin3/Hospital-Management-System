@@ -3,19 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            width: 100%;
+        }
+        li {
+            float: right;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #111;
+        }
+        h1, h2, form {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
    {% if session.user_name %}
     <h1>Home</h1>
-    <h2>Welcome!</h2>
-    You are registered, {{ session.user_name }} <br>
-   Sign up for an <a href="/schedule-appointment">appointment</a><br>
-    <div>
-    <li><a href="{{url_for('logout')}}">Logout</a></li>
-    <li><a href="{{url_for('schedule-appointment')}}">Schedule Appointment</a></li>
+       <div>
+    <ul><li><a href="{{url_for('logout')}}">Logout</a></li>
+    <li><a href="{{url_for('schedule-appointment')}}">Schedule Appointment</a></li></ul>
     </div>
+    <h2>Welcome!</h2>
+       <p>You are registered, {{ session.user_name }}</p><br>
    {% else %}
-   You are not registered. Log in <a href="{{url_for('login')}}">here</a>.
+       <p>You are not registered. Log in <a href="{{url_for('login')}}">here</a>.</p>
    {% endif %}
 </body>
 </html>

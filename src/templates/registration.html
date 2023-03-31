@@ -31,22 +31,31 @@
         form {
             text-align: center;
         }
-
+        p {
+            text-align: center;
+            color: red;
+        }
     </style>
 </head>
 <body>
     <h1>Register a new account</h1>
-    <ul><li><a href="{{url_for('home')}}">Home</a></li></ul><br><br><br>
+    <ul>
+        <li><a href="{{url_for('home')}}">Home</a></li>
+        <li><a href="{{url_for('login')}}">Login</a></li>
+    </ul><br><br><br>
     <form action="{{url_for('register_new_user')}}" method="post">
         <label>Username: </label>
         <input placeholder="Name" type="text" name="username" id="username" required><br><br>
         <label>Email: </label>
         <input placeholder="name@server.com" type="text" name="email" id="email" required><br><br>
         <label>Password: </label>
-        <input placeholder="secure password" type="text" name="password" id="password" required><br><br>
+        <input placeholder="secure password" type="password" name="password" id="password" required><br><br>
         <label>Repeat Password: </label>
-        <input placeholder="same password" type="text" name="password_confirm" id="password_confirm" required><br><br>
+        <input placeholder="same password" type="password" name="password_confirm" id="password_confirm" required><br><br>
         <input type="submit" value="Register">
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% endif %}
     </form><br>
 </body>
 </html>

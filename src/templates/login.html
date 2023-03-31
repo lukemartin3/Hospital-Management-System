@@ -31,20 +31,27 @@
         form {
             text-align: center;
         }
+        p {
+            text-align: center;
+            color: red;
+        }
     </style>
 </head>
 <body>
     <h1>Login</h1>
     <ul>
-        <li><a href="{{url_for('register_new_user')}}">Register</a></li>
-         <li><a href="{{url_for('forgot_password')}}">Forgot Your Password?</a></li>
+        <li><a href="{{url_for('forgot_password')}}">Forgot Your Password?</a>
+        </li><li><a href="{{url_for('register_new_user')}}">Register</a></li>
     </ul><br><br>
     <form action="{{url_for('login')}}" method="post">
         <label>Username:</label>
-        <input placeholder="Name" type="text" name="username" id="username" required><br><br>
+        <input placeholder="Username" type="text" name="username" id="username" required><br><br>
         <label>Password:</label>
-        <input placeholder="password" type="text" name="password" id="password" required><br><br>
+        <input placeholder="password" type="password" name="password" id="password" required><br><br>
         <input type="submit" value="login">
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% endif %}
     </form><br>
 </body>
 </html>
