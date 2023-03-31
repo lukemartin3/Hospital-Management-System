@@ -37,8 +37,11 @@
    {% if session.username %}
     <h1>Home</h1>
        <div>
-    <ul><li><a href="{{url_for('logout')}}">Logout</a></li>
-    <li><a href="{{url_for('schedule')}}">Schedule Appointment</a></li></ul>
+    <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
+        <li><a href="{{url_for('schedule')}}">Schedule Appointment</a></li>
+    </ul>
     </div>
     <h2>Welcome!</h2>
        <p>You are registered, {{ session.username }}</p><br>

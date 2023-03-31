@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '871056'
-__DATABASE = 'users'
+__PASSWORD = 'Topher1028'
+__DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
 app.config['SESSION_TYPE'] = 'filesystem' 
@@ -82,16 +82,29 @@ def logout():
 
 @app.route("/schedule-appointment", methods=["POST", "GET"])
 def schedule():
-    if not session.get("user_name"):
+    if not session.get("username"):
         return redirect("/login")
     if request.method == "POST":
         date = request.form.get('date')
         time = request.form.get('time')
-        mycursor.execute('INSERT INTO appointments (username, date, time) VALUES (%s, %s, %s)',
-                         (session['username'], date, time))
+        date_time = date + ' ' + time
+        mycursor.execute('INSERT INTO appointments (username, datetime) VALUES (%s, %s)',
+                         # in 'appointments' table make row for username and 'datetime' with datatype: DATETIME
+                         (session['username'], date_time))
         con.commit()
         return render_template("home.html")
     return render_template("scheduling.html")
+
+@app.route("/see-appointments", methods=['POST', 'GET'])
+def see_appointments():
+    if not session.get("username"):
+        return redirect("/login")
+    if request.method == "POST":
+        pass
+    else:
+        mycursor.execute('SELECT datetime FROM appointments WHERE username=%s', (session['username'],))
+        appointments = mycursor.fetchall()
+        return render_template("see-appointments.html", appointments=appointments)
 
 
 if __name__ == "__main__":
