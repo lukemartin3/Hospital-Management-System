@@ -28,34 +28,42 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        mycursor.execute('SELECT * FROM user WHERE username=%s AND password=%s',(username, password))
+        mycursor.execute('SELECT * FROM user WHERE username=%s AND password=%s',
+                         (username, password))
         record = mycursor.fetchone()
+        print(record)
         if record:
             session['loggedin'] = True
             session['username'] = record[0]
             return redirect(url_for('home'))
         else:
             msg="Incorrect username or password"
-    return render_template('login.html',msg=msg)
+    return render_template('login.html', msg=msg)
 
 @app.route("/register", methods=["POST", "GET"])
 def register_new_user():
     msg=''
     if request.method == 'POST':
         username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
-        confirm_pass = request.form.get('confirm_password')
+        confirm_pass = request.form.get('password_confirm')
         if password != confirm_pass:
             msg="Passwords do not match"
         else:
-            mycursor.execute('SELECT * FROM user WHERE username=%s',(username,))
+            mycursor.execute('SELECT * FROM user WHERE email=%s OR username=%s',
+                             (email, username))
             record = mycursor.fetchone()
             if record:
-                msg="Username already exists"
+                if record[1] == email:
+                    msg = 'Email already exists'
+                else:
+                    msg = "Username already exists"
             else:
-                mycursor.execute('INSERT INTO user (username, password) VALUES (%s, %s)',(username, password))
+                mycursor.execute('INSERT INTO user (username, email, password) VALUES (%s, %s, %s)',
+                                 (username, email, password))
                 con.commit()
-                msg="You have successfully registered"
+                return redirect(url_for('login'))
     return render_template('registration.html', msg=msg)
 
 @app.route("/forgot-password", methods=["POST", "GET"])
@@ -78,12 +86,12 @@ def schedule():
     if request.method == "POST":
         date = request.form.get('date')
         time = request.form.get('time')
-        notes = request.form.get('notes')
-        mycursor.execute('INSERT INTO appointments (username, date, time, notes) VALUES (%s, %s, %s, %s)',
-                         (session['username'], date, time, notes))
+        mycursor.execute('INSERT INTO appointments (username, date, time) VALUES (%s, %s, %s)',
+                         (session['username'], date, time))
         con.commit()
         return render_template("home.html")
     return render_template("scheduling.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
