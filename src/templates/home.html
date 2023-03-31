@@ -34,14 +34,14 @@
     </style>
 </head>
 <body>
-   {% if session.user_name %}
+   {% if session.username %}
     <h1>Home</h1>
        <div>
     <ul><li><a href="{{url_for('logout')}}">Logout</a></li>
-    <li><a href="{{url_for('schedule-appointment')}}">Schedule Appointment</a></li></ul>
+    <li><a href="{{url_for('schedule')}}">Schedule Appointment</a></li></ul>
     </div>
     <h2>Welcome!</h2>
-       <p>You are registered, {{ session.user_name }}</p><br>
+       <p>You are registered, {{ session.username }}</p><br>
    {% else %}
        <p>You are not registered. Log in <a href="{{url_for('login')}}">here</a>.</p>
    {% endif %}

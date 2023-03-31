@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = 'Topher1028'
-__DATABASE = 'FSEdb'
+__PASSWORD = '871056'
+__DATABASE = 'users'
 
 app.config['SECRET_KEY'] = "debug key" 
 app.config['SESSION_TYPE'] = 'filesystem' 
@@ -31,10 +31,11 @@ def login():
         mycursor.execute('SELECT * FROM user WHERE username=%s AND password=%s',
                          (username, password))
         record = mycursor.fetchone()
-        print(record)
+        print("this is record", record)
         if record:
             session['loggedin'] = True
-            session['username'] = record[0]
+            session['username'] = username  #record[0]
+            print("this is current session username", session['username'])
             return redirect(url_for('home'))
         else:
             msg="Incorrect username or password"
