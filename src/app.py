@@ -22,6 +22,16 @@ mycursor = con.cursor()
 def home():
     return render_template('home.html')
 
+
+@app.route("/admin")
+def admin():
+    if not session.get("username"):
+        return redirect("/login")
+    if session['username'] != 'admin':
+        return redirect("/")
+    return render_template("admin.html")
+
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
     msg=''
@@ -106,6 +116,17 @@ def see_appointments():
         appointments = mycursor.fetchall()
         return render_template("see-appointments.html", appointments=appointments)
 
+
+@app.route("/see-patients", methods=['POST', 'GET'])
+def see_patients():
+    if not session.get("username"):
+        return redirect("/login")
+    mycursor.execute('SELECT username FROM user')
+    result = mycursor.fetchall()
+    print(result)
+    usernames = [row[0] for row in result]
+    print(usernames)
+    return render_template("see-patients.html", usernames=usernames)
 
 if __name__ == "__main__":
     app.run(debug=True)
