@@ -1,0 +1,62 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>See Patients</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            width: 100%;
+        }
+        li {
+            float: right;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #111;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        .table-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 10vh;
+        }
+        table {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>See Patients</h1>
+    <ul>
+        <li><a href="{{url_for('admin')}}">Admin</a></li>
+    </ul><br><br><br>
+    <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>Patient Usernames</th>
+            </tr>
+            {% for username in usernames %}
+            <tr>
+                <td>{{ username }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
