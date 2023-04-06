@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = 'Topher1028'
-__DATABASE = 'fsedb'
+__PASSWORD = '5crNoOdN1331'
+__DATABASE = 'users'
 
 app.config['SECRET_KEY'] = "debug key" 
 app.config['SESSION_TYPE'] = 'filesystem' 
@@ -59,7 +59,10 @@ def register_new_user():
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_pass = request.form.get('password_confirm')
-        if password != confirm_pass:
+        unique_pin = request.form.get('four_pin')
+        if len(unique_pin) > 4:
+            msg = "Pin can not exceed 4 characters."
+        elif password != confirm_pass:
             msg="Passwords do not match"
         else:
             mycursor.execute('SELECT * FROM user WHERE email=%s OR username=%s',
@@ -71,18 +74,51 @@ def register_new_user():
                 else:
                     msg = "Username already exists"
             else:
-                mycursor.execute('INSERT INTO user (username, email, password) VALUES (%s, %s, %s)',
-                                 (username, email, password))
+                mycursor.execute('INSERT INTO user (username, email, password, pin) VALUES (%s, %s, %s, %s)',
+                                 (username, email, password, unique_pin))
                 con.commit()
                 return redirect(url_for('login'))
     return render_template('registration.html', msg=msg)
 
 @app.route("/forgot-password", methods=["POST", "GET"])
 def forgot_password():
+    msg=''
     if request.method == "POST":
-        # TODO: Send email
-        return redirect("/")
+        username = request.form.get('username')
+        email = request.form.get('email')
+        unique_pin = request.form.get('four_pin')
+        mycursor.execute('SELECT * FROM user WHERE username=%s AND email=%s AND pin=%s',
+                         (username, email, unique_pin))
+        record = mycursor.fetchone()
+        if record:
+            session['loggedin'] = True
+            session['username'] = username  #record[0]
+            print("this is current session username", session['username'])
+            return redirect(url_for('reset'))
+        else:
+            msg="Incorrect username, email, or pin"
+        return render_template('forgot-password.html', msg=msg)
     return render_template("forgot-password.html")
+
+@app.route("/reset-password", methods=["POST", "GET"])
+def reset():
+    msg=''
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm_pass = request.form.get('password_confirm')
+        if password != confirm_pass:
+            msg="Passwords do not match"
+        else:
+            mycursor.execute('UPDATE users.user SET password = %s WHERE username = %s',
+                                (password, username))
+            con.commit()
+            session['loggedin'] = True
+            session['username'] = username  #record[0]
+            print("this is current session username", session['username'])
+            return redirect(url_for('login'))
+    return render_template('reset-password.html', msg=msg)
+    
 
 @app.route("/logout")
 def logout():
