@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '5crNoOdN1331'
+__PASSWORD = 'jskdf'
 __DATABASE = 'users'
 
 app.config['SECRET_KEY'] = "debug key" 
