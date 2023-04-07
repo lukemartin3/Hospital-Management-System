@@ -45,18 +45,24 @@
     <h1>Your Appointments</h1>
     <ul>
         <li><a href="{{url_for('home')}}">Home</a></li>
+        <li><a href="{{url_for('get_appointment')}}">Schedule Appointment</a></li>
     </ul><br><br><br>
     <div class="table-wrapper">
         <table>
             <tr>
-                <th>Date and Time</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
             </tr>
             {% for appointment in appointments %}
             <tr>
-                <td>{{ appointment[0] }}</td>
+                <td>{{ appointment[1] }}</td>
+                <td>{{ appointment[2] }}</td>
+                <td>{{ appointment[3] }}</td>
             </tr>
             {% endfor %}
         </table>
     </div>
+
 </body>
 </html>
