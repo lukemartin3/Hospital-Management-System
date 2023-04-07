@@ -5,7 +5,7 @@ docutils==0.17.1
 html5lib==1.1
 httplib2==0.20.2
 Flask==2.2.3
-Flask-Session==0.4.0
+flask-session==0.4.0
 jsonpickle==2.2.0
 jsonschema==3.2.0
 mysqlclient==2.1.1
@@ -16,3 +16,5 @@ tox==4.4.5
 urllib3==1.26.5
 virtualenv==20.19.0
 mysql-connector-python==8.0.32
+Flask-Bcrypt==0.7.1
+Flask-Mail==0.9.1

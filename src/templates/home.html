@@ -34,8 +34,8 @@
     </style>
 </head>
 <body>
-    <h1>Home</h1>
    {% if session.username %}
+    <h1>Home</h1>
     <div>
         <ul>
             {% if session.get("username") == 'admin' %}
@@ -44,7 +44,7 @@
             {% else %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
-                <li><a href="{{url_for('schedule')}}">Schedule Appointment</a></li>
+                <li><a href="{{url_for('get_appointment')}}">Schedule Appointment</a></li>
             {% endif %}
         </ul>
     </div>

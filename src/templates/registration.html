@@ -53,6 +53,10 @@
         <input placeholder="same password" type="password" name="password_confirm" id="password_confirm" required><br><br>
         <label>Unique 4 Digit Pin: </label>
         <input placeholder="pin" type="text" name="four_pin" id="four_pin" required><br><br>
+        <label>Doctor:</label>
+        <input type="checkbox" name="doctor"><br><br>
+        <label>Nurse:</label>
+        <input type="checkbox" name="nurse"><br><br>
         <input type="submit" value="Register">
         {% if msg %}
             <p>{{ msg }}</p>
