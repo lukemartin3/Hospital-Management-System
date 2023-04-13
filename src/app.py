@@ -91,7 +91,7 @@ def register_new_user():
         unique_pin = request.form.get('four_pin')
         doctor = request.form.get('doctor') == 'on'
         nurse = request.form.get('nurse') == 'on'
-        if len(unique_pin) > 4:
+        if unique_pin and len(unique_pin) > 4:
             msg = "Pin can not exceed 4 characters."
         elif password != confirm_pass:
             msg = "Passwords do not match"
@@ -180,7 +180,7 @@ def see_appointments():
     if not session.get("username"):
         return redirect("/login")
     if request.method == "POST":
-        pass
+        pass # TODO: What should we do here?
     else:
         mycursor.execute('SELECT * FROM appointments WHERE username=%s', (session['username'],))
         appointments = mycursor.fetchall()
@@ -194,11 +194,15 @@ def get_appointment():
     mycursor.execute('SELECT * FROM appointments')
     records = mycursor.fetchall()
     if request.method == 'POST':
-        appointment_id = int(request.form.get('appointment_id'))
-        mycursor.execute('UPDATE appointments SET username = %s WHERE id = %s',
-                         (session['username'], appointment_id))
-        con.commit()
-        return redirect(url_for('doctor_home' if session.get("doctor") else 'nurse_home'))
+        appointment_id = request.form.get('appointment_id')
+        if appointment_id:
+            appointment_id = int(appointment_id)
+            mycursor.execute('UPDATE appointments SET username = %s WHERE id = %s',
+                             (session['username'], appointment_id))
+            con.commit()
+            return redirect(url_for('doctor_home' if session.get("doctor") else 'nurse_home'))
+        else:
+            pass # TODO: add handling for invalid appointment IDs
     return render_template('book-appointment.html', records=records)
 
 
