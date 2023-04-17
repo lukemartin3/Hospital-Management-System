@@ -215,7 +215,10 @@ def see_patients():
     usernames = [row[0] for row in result]
     return render_template("see-patients.html", usernames=usernames)
 
+def run_app(debug=True):
+    app.run(debug=debug)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    run_app(True)
 
 
