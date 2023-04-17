@@ -33,6 +33,14 @@ class TestLogout(unittest.TestCase):
     def tearDown(self):
         self.cursor.execute('DROP TABLE usersTest')
         self.conn.close()
+        
+    def test_valid_login(self):
+        response = self.client.post('/login', data=dict(
+            username='testuser',
+            password='testpass'
+        ), follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
 
     def test_logout(self):
         with self.client as c:
