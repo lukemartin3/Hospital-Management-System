@@ -139,6 +139,11 @@ def forgot_password():
         mycursor.execute('SELECT * FROM users WHERE username=%s AND email=%s AND pin=%s',
                          (username, email, unique_pin))
         record = mycursor.fetchone()
+        mycursor.execute('SELECT pin FROM users WHERE username=%s AND email=%s', (username, email))
+        send_pin = mycursor.fetchone()
+        mycursor.execute('SELECT email FROM users WHERE username=%s AND email=%s', (username, email))
+        send_email = mycursor.fetchone()
+
        
         if record:
             session['loggedin'] = True
@@ -151,12 +156,15 @@ def forgot_password():
             send_pin = mycursor.fetchone()
             mycursor.execute('SELECT email FROM users WHERE username=%s AND email=%s', (username, email))
             send_email = mycursor.fetchone()
-            print(send_email[0], send_pin)
-            msg2 = Message("Hello " + username,
+
+            if send_pin == None or send_email == None:
+                msg = "Incorrect username or pin."
+            else: 
+                msg2 = Message("Hello " + username,
                             sender = "swe.team09@gmail.com", 
                             recipients = ["swe.team09@gmail.com", send_email[0]])
-            msg2.body = "here is your 4 digit pin: " + str(send_pin[0])
-            mail.send(msg2)
+                msg2.body = "here is your 4 digit pin: " + str(send_pin[0])
+                mail.send(msg2)
 
         return render_template('forgot-password.html', msg=msg)
     return render_template("forgot-password.html")
