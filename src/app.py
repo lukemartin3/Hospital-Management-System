@@ -3,6 +3,8 @@ import mysql.connector
 # Always use Flask.session instead of the Session object for direct access.
 from flask_session import Session
 from flask_mail import Mail, Message
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 
@@ -21,36 +23,25 @@ mycursor = con.cursor()
 
 @app.route("/")
 def home():
+    if not session.get("username"):
+        return redirect("/login")
     return render_template('home.html')
 
 
-@app.route("/doctor-home")
-def doctor_home():
-    if not session.get("username"):
-        return redirect("/login")
-    if session.get("doctor"):
-        return render_template("doctor-home.html")
-    else:
-        return redirect("/")
+@app.route('/assign_roles', methods=["POST", "GET"])
+def assign_roles():
+    msg = ''
+    if session.get('role') != 0:
+        return redirect('/')
+    if request.method == 'POST':
+        username = request.form.get('username')
+        role = request.form.get('role')
+        specialty = request.form.get('specialization') if role == '3' else None
+        mycursor.execute('UPDATE users SET roles=%s AND specialization=%s WHERE username=%s', (role, username, specialty))
+        con.commit()
+        msg = 'Successfully created Nurse/Physician!'
 
-
-@app.route("/nurse-home")
-def nurse_home():
-    if not session.get("username"):
-        return redirect("/login")
-    if session.get("nurse"):
-        return render_template("nurse-home.html")
-    else:
-        return redirect("/")
-
-
-@app.route("/admin")
-def admin():
-    if not session.get("username"):
-        return redirect("/login")
-    if session['username'] != 'admin':
-        return redirect("/")
-    return render_template("admin.html")
+    return render_template('assign.html')
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -59,21 +50,14 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        mycursor.execute('SELECT * FROM users WHERE username=%s AND password=%s',
-                         (username, password))
+        mycursor.execute('SELECT * FROM users WHERE username=%s',
+                         (username,))
         record = mycursor.fetchone()
-        print("this is record", record)
-        if record:
+        if record and check_password_hash(record[1], password):
             session['loggedin'] = True
             session['username'] = username
-            session['doctor'] = record[4]
-            session['nurse'] = record[5]
-            if record[4]:
-                return redirect(url_for('doctor_home'))
-            elif record[5]:
-                return redirect(url_for('nurse_home'))
-            else:
-                return redirect(url_for('home'))
+            session['role'] = record[15]
+            return redirect(url_for('home'))
         else:
             msg="Incorrect username or password"
     return render_template('login.html', msg=msg)
@@ -85,34 +69,51 @@ def register_new_user():
     msg = ''
     if request.method == 'POST':
         username = request.form.get('username')
-        email = request.form.get('email')
         password = request.form.get('password')
         confirm_pass = request.form.get('password_confirm')
         unique_pin = request.form.get('four_pin')
-        doctor = request.form.get('doctor') == 'on'
-        nurse = request.form.get('nurse') == 'on'
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        dob = request.form.get('dob')
+        phone = request.form.get('phone')
+        address = request.form.get('address')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        zip = request.form.get('zip')
+        insurance = request.form.get('insurance')
+        med_history = request.form.get('med_history')
+
         if unique_pin and len(unique_pin) > 4:
             msg = "Pin can not exceed 4 characters."
         elif password != confirm_pass:
             msg = "Passwords do not match"
         else:
+            hashed_password = generate_password_hash(password)
+            roles = 1
+            # specialty = ' '
             mycursor.execute('SELECT * FROM users WHERE email=%s OR username=%s',
                               (email, username))
             record = mycursor.fetchone()
             if record:
-                if record[1] == email:
+                if record[5] == email:
                     msg = 'Email already exists'
                 else:
                     msg = "Username already exists"
             else:
-                mycursor.execute('INSERT INTO users (username, email, password, pin, doctor, nurse) VALUES (%s, %s, %s, %s, %s, %s)',
-                                  (username, email, password, unique_pin, doctor, nurse))
+                mycursor.execute('INSERT INTO users (username, email, password, pin, '
+                                 'fname, lname, dob, phone, address, city, states, zip, '
+                                 'insurance, history, roles) VALUES (%s, %s, %s, %s, %s, %s, %s, '
+                                 '%s, %s, %s, %s, %s, %s, %s, %s)', (username, email,
+                                                                 hashed_password, unique_pin,
+                                                                 first_name, last_name, dob,
+                                                                 phone, address, city, state,
+                                                                 zip, insurance, med_history, roles))
                 con.commit()
+                print("success")
                 session['loggedin'] = True
                 session['username'] = username
-                session['doctor'] = doctor
-                session['nurse'] = nurse
-                return redirect(url_for('doctor_home' if doctor else 'nurse_home'))
+                return redirect(url_for('home'))
     return render_template('registration.html', msg=msg)
 
 
@@ -128,7 +129,7 @@ def forgot_password():
         record = mycursor.fetchone()
         if record:
             session['loggedin'] = True
-            session['username'] = username  #record[0]
+            session['username'] = username
             print("this is current session username", session['username'])
             return redirect(url_for('reset'))
         else:
@@ -162,11 +163,14 @@ def logout():
     session.pop('username', None)
     return redirect("/")
 
+
 @app.route("/schedule-appointment", methods=["POST", "GET"])
 def schedule():
-    if not session.get("doctor"): # "username"
+    if session.get("role") != 0:
         return redirect("/login")
     if request.method == "POST":
+        # doctor name
+        # specialty
         date = request.form.get('date')
         time = request.form.get('time')
         mycursor.execute('INSERT INTO appointments (doctor_name, date, time) VALUES (%s, %s, %s)',

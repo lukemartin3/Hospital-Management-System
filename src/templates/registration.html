@@ -45,18 +45,34 @@
     <form action="{{url_for('register_new_user')}}" method="post">
         <label>Username: </label>
         <input placeholder="Name" type="text" name="username" id="username" required><br><br>
-        <label>Email: </label>
-        <input placeholder="name@server.com" type="text" name="email" id="email" required><br><br>
         <label>Password: </label>
         <input placeholder="secure password" type="password" name="password" id="password" required><br><br>
         <label>Repeat Password: </label>
         <input placeholder="same password" type="password" name="password_confirm" id="password_confirm" required><br><br>
+        <label>Email: </label>
+        <input placeholder="name@server.com" type="text" name="email" id="email" required><br><br>
         <label>Unique 4 Digit Pin: </label>
         <input placeholder="pin" type="text" name="four_pin" id="four_pin" required><br><br>
-        <label>Doctor:</label>
-        <input type="checkbox" name="doctor"><br><br>
-        <label>Nurse:</label>
-        <input type="checkbox" name="nurse"><br><br>
+        <label>First Name: </label>
+        <input placeholder="John" type="text" name="first_name" id="first_name" required><br><br>
+        <label>Last Name: </label>
+        <input placeholder="Doe" type="text" name="last_name" id="last_name" required><br><br>
+        <label>Date of Birth: </label>
+        <input class="form-control" type="date" name="dob" id="dob" required><br><br>
+        <label>phone Number: </label>
+        <input placeholder="123-456-7890" type="text" name="phone" id="phone" required><br><br>
+        <label>Address: </label>
+        <input placeholder="123 main st." type="text" name="address" id="address" required><br><br>
+        <label>City: </label>
+        <input placeholder="Iowa City" type="text" name="city" id="city" required><br><br>
+        <label>State: </label>
+        <input placeholder="IA" type="text" name="state" id="state" required><br><br>
+        <label>Zip Code: </label>
+        <input placeholder="12345" type="text" name="zip" id="zip" required><br><br>
+        <label>Health insurance Provider: </label>
+        <input placeholder="ex: Blue Cross Blue Shield" type="text" name="insurance" id="insurance" required><br><br>
+        <label>Medical History (N/A if this doesn't apply): </label>
+        <input placeholder="List any allergies / past health problems" type="text" name="med_history" id="med_history" required><br><br>
         <input type="submit" value="Register">
         {% if msg %}
             <p>{{ msg }}</p>

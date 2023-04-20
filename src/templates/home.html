@@ -38,9 +38,14 @@
     <h1>Home</h1>
     <div>
         <ul>
-            {% if session.get("username") == 'admin' %}
+            {% if session.get("role") == 0 %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
-                <li><a href="{{ url_for('admin') }}">Admin</a></li>
+                <li><a href="{{url_for('assign_roles')}}">Create Physician/Nurse</a></li>
+                <li><a href="{{url_for('schedule')}}">Set Doctor Schedule</a></li>
+            {% elif session.get("role") == 2 %}
+                <li><a href="{{url_for('logout')}}">Logout</a></li>
+            {% elif session.get("role") == 3 %}
+                <li><a href="{{url_for('logout')}}">Logout</a></li>
             {% else %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
