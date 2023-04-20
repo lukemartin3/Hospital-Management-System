@@ -2,19 +2,32 @@ from flask import Flask, render_template, request, session, url_for, redirect
 import mysql.connector
 # Always use Flask.session instead of the Session object for direct access.
 from flask_session import Session
-from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = 'Topher1028'
-__DATABASE = 'fsedb'
+__PASSWORD = '5crNoOdN1331'
+__DATABASE = 'Users'
 
 app.config['SECRET_KEY'] = "debug key" 
 app.config['SESSION_TYPE'] = 'filesystem' 
 app.config['SESSION_PERMANENT']= False
 Session(app)
+
+from flask import Flask
+from flask_mail import Mail, Message
+
+app2 = Flask(__name__)
+mail= Mail(app)
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'swe.team09@gmail.com'
+app.config['MAIL_PASSWORD'] = 'vmxcgujzgzexmsfb'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 con = mysql.connector.connect(host=__HOST, user=__USERNAME, password=__PASSWORD, database=__DATABASE)
 mycursor = con.cursor()
@@ -126,13 +139,25 @@ def forgot_password():
         mycursor.execute('SELECT * FROM users WHERE username=%s AND email=%s AND pin=%s',
                          (username, email, unique_pin))
         record = mycursor.fetchone()
+       
         if record:
             session['loggedin'] = True
             session['username'] = username  #record[0]
             print("this is current session username", session['username'])
             return redirect(url_for('reset'))
         else:
-            msg="Incorrect username, email, or pin"
+            msg="Incorrect username, email, or pin. Check your email for the correct pin"
+            mycursor.execute('SELECT pin FROM users WHERE username=%s AND email=%s', (username, email))
+            send_pin = mycursor.fetchone()
+            mycursor.execute('SELECT email FROM users WHERE username=%s AND email=%s', (username, email))
+            send_email = mycursor.fetchone()
+            print(send_email[0], send_pin)
+            msg2 = Message("Hello " + username,
+                            sender = "swe.team09@gmail.com", 
+                            recipients = ["swe.team09@gmail.com", send_email[0]])
+            msg2.body = "here is your 4 digit pin: " + str(send_pin[0])
+            mail.send(msg2)
+
         return render_template('forgot-password.html', msg=msg)
     return render_template("forgot-password.html")
 
