@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '5crNoOdN1331'
-__DATABASE = 'Users'
+__PASSWORD = 'pw'
+__DATABASE = 'db'
 
 app.config['SECRET_KEY'] = "debug key" 
 app.config['SESSION_TYPE'] = 'filesystem' 
@@ -151,7 +151,7 @@ def forgot_password():
             print("this is current session username", session['username'])
             return redirect(url_for('reset'))
         else:
-            msg="Incorrect username, email, or pin. Check your email for the correct pin"
+            msg="Incorrect username, email, or pin. Check your email for the correct pin."
             mycursor.execute('SELECT pin FROM users WHERE username=%s AND email=%s', (username, email))
             send_pin = mycursor.fetchone()
             mycursor.execute('SELECT email FROM users WHERE username=%s AND email=%s', (username, email))
@@ -179,7 +179,7 @@ def reset():
         if password != confirm_pass:
             msg="Passwords do not match"
         else:
-            mycursor.execute('UPDATE fsedb.users SET password = %s WHERE username = %s',
+            mycursor.execute('UPDATE users.users SET password = %s WHERE username = %s',
                                 (password, username))
             con.commit()
             session['loggedin'] = True
