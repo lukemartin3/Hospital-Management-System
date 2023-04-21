@@ -30,17 +30,16 @@ def home():
 
 @app.route('/assign_roles', methods=["POST", "GET"])
 def assign_roles():
-    msg = ''
     if session.get('role') != 0:
         return redirect('/')
     if request.method == 'POST':
         username = request.form.get('username')
         role = request.form.get('role')
-        specialty = request.form.get('specialization') if role == '3' else None
-        mycursor.execute('UPDATE users SET roles=%s AND specialization=%s WHERE username=%s', (role, username, specialty))
+        specialty = request.form.get('specialization') if role == 3 else None
+        mycursor.execute('UPDATE users SET roles=%s, specialization=%s WHERE username=%s', (role, specialty, username))
         con.commit()
         msg = 'Successfully created Nurse/Physician!'
-
+        return render_template('assign.html', msg=msg)
     return render_template('assign.html')
 
 
@@ -61,7 +60,6 @@ def login():
         else:
             msg="Incorrect username or password"
     return render_template('login.html', msg=msg)
-
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -90,8 +88,6 @@ def register_new_user():
             msg = "Passwords do not match"
         else:
             hashed_password = generate_password_hash(password)
-            roles = 1
-            # specialty = ' '
             mycursor.execute('SELECT * FROM users WHERE email=%s OR username=%s',
                               (email, username))
             record = mycursor.fetchone()
@@ -103,12 +99,12 @@ def register_new_user():
             else:
                 mycursor.execute('INSERT INTO users (username, email, password, pin, '
                                  'fname, lname, dob, phone, address, city, states, zip, '
-                                 'insurance, history, roles) VALUES (%s, %s, %s, %s, %s, %s, %s, '
-                                 '%s, %s, %s, %s, %s, %s, %s, %s)', (username, email,
+                                 'insurance, history) VALUES (%s, %s, %s, %s, %s, %s, %s, '
+                                 '%s, %s, %s, %s, %s, %s, %s)', (username, email,
                                                                  hashed_password, unique_pin,
                                                                  first_name, last_name, dob,
                                                                  phone, address, city, state,
-                                                                 zip, insurance, med_history, roles))
+                                                                 zip, insurance, med_history))
                 con.commit()
                 print("success")
                 session['loggedin'] = True
@@ -169,7 +165,7 @@ def schedule():
     if session.get("role") != 0:
         return redirect("/login")
     if request.method == "POST":
-        # doctor name
+        username = request.form.get('username')
         # specialty
         date = request.form.get('date')
         time = request.form.get('time')

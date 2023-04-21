@@ -47,8 +47,8 @@
         <input placeholder="Name" type="text" name="username" id="username" required><br><br>
         <label>Role:</label>
         <select name="role">
-            <option value="2">Nurse</option>
-            <option value="3">Physician</option>
+            <option value=2>Nurse</option>
+            <option value=3>Physician</option>
         </select><br><br>
         <div id="specialization" style="display: none;">
             <label>Specialization:</label>
@@ -78,7 +78,10 @@
                 }
             });
         </script>
-        <input type="submit" value="Assign">
+        <input type="submit" value="Assign"><br>
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% endif %}
     </form><br>
 </body>
 </html>
