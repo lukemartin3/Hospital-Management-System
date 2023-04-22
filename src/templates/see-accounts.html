@@ -63,14 +63,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 50px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <h1>See Accounts</h1>
     <ul>
-        <li><a href="{{url_for('home')}}">Admin</a></li>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('home')}}">Home</a></li>
     </ul><br><br><br>
     <div class="container">
         <form action="{{ url_for('see_accounts') }}" method="post">

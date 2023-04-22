@@ -36,6 +36,7 @@
 <body>
     <h1>Schedule an Appointment</h1>
     <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
         <li><a href="{{url_for('home')}}">Home</a></li>
     </ul><br><br><br>
     <form method="post" action="{{ url_for('schedule')}}">
@@ -45,7 +46,7 @@
         <input type="date" class="form-control" id="date" name="date" required><br><br>
         <label for="time">Time</label>
         <input type="time" class="form-control" id="time" name="time" required><br><br>
-        <label for="fee">Set Appointment Fee</label>
+        <label for="fee">Set Appointment Fee $</label>
         <input type="number" id="fee" name="fee" required><br><br>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

@@ -35,7 +35,11 @@ def assign_roles():
     if request.method == 'POST':
         username = request.form.get('username')
         role = request.form.get('role')
-        specialty = request.form.get('specialization') if role == 3 else None
+        print(role)
+        if role == "3":
+            specialty = request.form.get('specialty')
+        else:
+            None
         mycursor.execute('UPDATE users SET roles=%s, specialization=%s WHERE username=%s', (role, specialty, username))
         con.commit()
         msg = 'Successfully created Nurse/Physician!'
@@ -106,8 +110,7 @@ def register_new_user():
                                                                  phone, address, city, state,
                                                                  zip, insurance, med_history))
                 con.commit()
-                print("success")
-                session['loggedin'] = True
+                #session['loggedin'] = True
                 session['username'] = username
                 return redirect(url_for('home'))
     return render_template('registration.html', msg=msg)
@@ -175,35 +178,39 @@ def schedule():
         return render_template("doctor-home.html")
     return render_template("scheduling.html")
 
-@app.route("/see-appointments", methods=['POST', 'GET'])
-def see_appointments():
-    if not session.get("username"):
-        return redirect("/login")
-    if request.method == "POST":
-        pass # TODO: What should we do here?
-    else:
-        mycursor.execute('SELECT * FROM appointments WHERE username=%s', (session['username'],))
-        appointments = mycursor.fetchall()
-        return render_template("see-appointments.html", appointments=appointments)
+
+# @app.route("/see-appointments", methods=['POST', 'GET'])
+# def see_appointments():
+#     if not session.get("username"):
+#         return redirect("/login")
+#     if request.method == "POST":
+#         pass # TODO: What should we do here?
+#     else:
+#         mycursor.execute('SELECT * FROM appointments WHERE username=%s', (session['username'],))
+#         appointments = mycursor.fetchall()
+#         return render_template("see-appointments.html", appointments=appointments)
+#
+#
+# @app.route("/book-appointment", methods=["POST", "GET"])
+# def book_appointment():
+#     if not session.get("username"):
+#         return redirect("/login")
+#     if request.method == 'POST':
+#         specialty = request.form.get('specialty')
+#         mycursor.execute('SELECT * FROM appointments WHERE specialization=%s', (specialty,))
+#         records = mycursor.fetchall()
+#         appointment_id = request.form.get('appointment_id')
+#         if appointment_id:
+#             appointment_id = int(appointment_id)
+#             mycursor.execute('UPDATE appointments SET username = %s WHERE id = %s',
+#                              (session['username'], appointment_id))
+#             con.commit()
+#             return redirect(url_for('doctor_home' if session.get("doctor") else 'nurse_home'))
+#         else:
+#             pass # TODO: add handling for invalid appointment IDs
+#     return render_template('book-appointment.html', records=records)
 
 
-@app.route("/get-appointment", methods=["POST", "GET"])
-def get_appointment():
-    if not session.get("username"):
-        return redirect("/login")
-    mycursor.execute('SELECT * FROM appointments')
-    records = mycursor.fetchall()
-    if request.method == 'POST':
-        appointment_id = request.form.get('appointment_id')
-        if appointment_id:
-            appointment_id = int(appointment_id)
-            mycursor.execute('UPDATE appointments SET username = %s WHERE id = %s',
-                             (session['username'], appointment_id))
-            con.commit()
-            return redirect(url_for('doctor_home' if session.get("doctor") else 'nurse_home'))
-        else:
-            pass # TODO: add handling for invalid appointment IDs
-    return render_template('book-appointment.html', records=records)
 
 
 @app.route("/see-accounts", methods=['POST', 'GET'])

@@ -40,6 +40,7 @@
 <body>
     <h1>Assign a Role</h1>
     <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
         <li><a href="{{url_for('home')}}">Home</a></li>
     </ul><br><br><br>
     <form action="{{url_for('assign_roles')}}" method="post">
@@ -47,8 +48,8 @@
         <input placeholder="Name" type="text" name="username" id="username" required><br><br>
         <label>Role:</label>
         <select name="role">
-            <option value=2>Nurse</option>
-            <option value=3>Physician</option>
+            <option value="2">Nurse</option>
+            <option value="3">Physician</option>
         </select><br><br>
         <div id="specialization" style="display: none;">
             <label>Specialization:</label>
