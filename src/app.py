@@ -214,7 +214,7 @@ def book_appointment():
         msg = "Appointment booked successfully!"
     if 'specialty' in request.args:
         specialty = request.args.get('specialty')
-        mycursor.execute('SELECT * FROM appointments WHERE specialization=%s', (specialty,))
+        mycursor.execute('SELECT * FROM appointments WHERE specialization=%s AND pat_username IS NULL', (specialty,))
         records = mycursor.fetchall()
         if records:
             appts = [{'id': row[0], 'dr_fname': row[1], 'dr_lname': row[2], 'specialty': row[3], 'date': row[4],
