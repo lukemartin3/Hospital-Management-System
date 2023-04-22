@@ -24,12 +24,15 @@ DROP TABLE IF EXISTS `appointments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `appointments` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `doctor_name` varchar(45) NOT NULL,
+  `dr_fname` varchar(45) NOT NULL,
+  `dr_lname` varchar(45) NOT NULL,
+  `specialization` varchar(45) NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
-  `username` varchar(45) DEFAULT NULL,
+  `fee` decimal(10,2) NOT NULL,
+  `pat_username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +41,7 @@ CREATE TABLE `appointments` (
 
 LOCK TABLES `appointments` WRITE;
 /*!40000 ALTER TABLE `appointments` DISABLE KEYS */;
-INSERT INTO `appointments` VALUES (13,'1','2023-04-19','12:02:00','luke123'),(14,'1','2023-04-18','12:16:00','luke123'),(15,'1','2023-04-21','12:30:00','luke123');
+INSERT INTO `appointments` VALUES (1,'Luke','Martin','Oncology','2023-04-22','16:51:00',50.00,NULL),(2,'Luke','Martin','Oncology','2023-04-22','06:21:00',50.00,NULL),(3,'Luke','Martin','Oncology','2023-04-27','06:23:00',50.00,NULL),(4,'Luke','Martin','Oncology','2023-04-20','06:25:00',50.00,NULL),(5,'Luke','Martin','Oncology','2023-04-27','09:24:00',50.00,NULL);
 /*!40000 ALTER TABLE `appointments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-21  0:02:38
+-- Dump completed on 2023-04-22 14:01:33
