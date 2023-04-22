@@ -28,42 +28,72 @@
       li a:hover {
         background-color: #111;
       }
-      .table-wrapper {
-        margin: 0 auto;
-        width: fit-content;
-      }
+      .appointment-info {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            width: 300px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
     </style>
   </head>
-  <body>
-    <h1>Schedule an Appointment</h1>
-    <ul>
-      <li><a href="{{url_for('logout')}}">Logout</a></li>
-      <li><a href="{{url_for('home')}}">Home</a></li>
-      <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
-    </ul>
-    <div class="table-wrapper">
-      <form method="post">
-        <table>
-          <tr>
-            <th>ID</th>
-            <th>Doctor</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Select</th>
-          </tr>
-          {% for record in records %}
-          <tr>
-            <td>{{ record[0] }}</td>
-            <td>{{ record[1] }}</td>
-            <td>{{ record[2] }}</td>
-            <td>{{ record[3] }}</td>
-            <td><input type="radio" name="appointment_id" value="{{ record[0] }}"></td>
-          </tr>
-          {% endfor %}
-        </table>
-        <br>
-        <input type="submit" value="Select">
-      </form>
-    </div>
-  </body>
-</html>
+<body>
+      <h1>Schedule an Appointment</h1>
+      <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('home')}}">Home</a></li>
+{#        <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>#}
+      </ul><br><br>
+      <form action="{{url_for('book_appointment')}}" method="post">
+      <div class="container">
+            <label>Select a Specialization:</label><br>
+            <select id="specialty" onchange="getSpecialty()">
+              <option value="Cardiology">Cardiology</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="Endocrinology">Endocrinology</option>
+              <option value="Neurology">Neurology</option>
+              <option value="Oncology">Oncology</option>
+              <option value="Gastroenterology">Gastroenterology</option>
+              <option value="Ophthalmology">Ophthalmology</option>
+              <option value="Orthopedics">Orthopedics</option>
+              <option value="Pediatrics">Pediatrics</option>
+              <option value="Psychiatry">Psychiatry</option>
+              <option value="Radiology">Radiology</option>
+              <option value="Surgery">Surgery</option>
+            </select>
+          <br>
+          <label>Select an Appointment:</label><br><br>
+          {% if appts %}
+            {% for appt in appts %}
+              <div class="appointment-info">
+                <input type="radio" name="appointment_id" value={{ appt['id'] }} required>
+                <h3>Dr. {{ appt['dr_fname'] }} {{ appt['dr_lname'] }}</h3>
+                <p>Specialization: {{ appt['specialty'] }}</p>
+                <p>Date: {{ appt['date'] }}</p>
+                <p>Time: {{ appt['time'] }}</p>
+                <p>Appointment Fee: ${{ appt['fee'] }}</p>
+              </div><br>
+            {% endfor %}
+            <input type="hidden" name="username" value="{{ session['username'] }}">
+            <input type="submit" value="Schedule Appointment">
+          {% else %}
+            <p>{{ msg }}</p>
+          {% endif %}
+        </div>
+        </form>
+        <script>
+          function getSpecialty() {
+            let specialty = document.getElementById("specialty").value;
+            window.location.href = "/book-appointment?specialty=" + encodeURIComponent(specialty);
+          }
+        </script>
+    </body>
+    </html>
+

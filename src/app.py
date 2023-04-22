@@ -21,6 +21,7 @@ Session(app)
 con = mysql.connector.connect(host=__HOST, user=__USERNAME, password=__PASSWORD, database=__DATABASE)
 mycursor = con.cursor()
 
+
 @app.route("/")
 def home():
     if not session.get("username"):
@@ -136,6 +137,7 @@ def forgot_password():
         return render_template('forgot-password.html', msg=msg)
     return render_template("forgot-password.html")
 
+
 @app.route("/reset-password", methods=["POST", "GET"])
 def reset():
     msg=''
@@ -146,7 +148,7 @@ def reset():
         if password != confirm_pass:
             msg="Passwords do not match"
         else:
-            mycursor.execute('UPDATE fsedb.users SET password = %s WHERE username = %s',
+            mycursor.execute('UPDATE users SET password = %s WHERE username = %s',
                                 (password, username))
             con.commit()
             session['loggedin'] = True
@@ -169,13 +171,20 @@ def schedule():
         return redirect("/login")
     if request.method == "POST":
         username = request.form.get('username')
-        # specialty
         date = request.form.get('date')
         time = request.form.get('time')
-        mycursor.execute('INSERT INTO appointments (doctor_name, date, time) VALUES (%s, %s, %s)',
-                         (session['doctor'], date, time))
+        fee = request.form.get('fee')
+        mycursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+        record = mycursor.fetchone()
+        print(record)
+        first_name = record[3]
+        last_name = record[4]
+        specialty = record[16]
+        mycursor.execute('INSERT INTO appointments (dr_fname, dr_lname, specialization, date, time, fee) '
+                         'VALUES (%s, %s, %s, %s, %s, %s)',
+                         (first_name, last_name, specialty, date, time, fee))
         con.commit()
-        return render_template("doctor-home.html")
+        return render_template("home.html")
     return render_template("scheduling.html")
 
 
@@ -191,26 +200,27 @@ def schedule():
 #         return render_template("see-appointments.html", appointments=appointments)
 #
 #
-# @app.route("/book-appointment", methods=["POST", "GET"])
-# def book_appointment():
-#     if not session.get("username"):
-#         return redirect("/login")
-#     if request.method == 'POST':
-#         specialty = request.form.get('specialty')
-#         mycursor.execute('SELECT * FROM appointments WHERE specialization=%s', (specialty,))
-#         records = mycursor.fetchall()
-#         appointment_id = request.form.get('appointment_id')
-#         if appointment_id:
-#             appointment_id = int(appointment_id)
-#             mycursor.execute('UPDATE appointments SET username = %s WHERE id = %s',
-#                              (session['username'], appointment_id))
-#             con.commit()
-#             return redirect(url_for('doctor_home' if session.get("doctor") else 'nurse_home'))
-#         else:
-#             pass # TODO: add handling for invalid appointment IDs
-#     return render_template('book-appointment.html', records=records)
-
-
+@app.route("/book-appointment", methods=["POST", "GET"])
+def book_appointment():
+    msg=''
+    appts = []
+    if not session.get("username"):
+        return redirect("/login")
+    if request.method == 'POST':
+        username = request.form.get('username')
+        appointment_id = request.form.get('appointment_id')
+        mycursor.execute('UPDATE appointments SET pat_username=%s WHERE id=%s', (username, appointment_id,))
+        con.commit()
+        msg = "Appointment booked successfully!"
+    if 'specialty' in request.args:
+        specialty = request.args.get('specialty')
+        mycursor.execute('SELECT * FROM appointments WHERE specialization=%s', (specialty,))
+        records = mycursor.fetchall()
+        if records:
+            appts = [{'id': row[0], 'dr_fname': row[1], 'dr_lname': row[2], 'specialty': row[3], 'date': row[4],
+                      'time': row[5], 'fee': row[6]}
+                     for row in records]
+    return render_template('book-appointment.html', appts=appts, msg=msg)
 
 
 @app.route("/see-accounts", methods=['POST', 'GET'])

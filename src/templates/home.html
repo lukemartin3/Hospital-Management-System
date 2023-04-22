@@ -49,13 +49,13 @@
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
             {% else %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
-                <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
-                <li><a href="{{url_for('get_appointment')}}">Schedule Appointment</a></li>
+{#                <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>#}
+                <li><a href="{{url_for('book_appointment')}}">Schedule Appointment</a></li>
             {% endif %}
         </ul>
     </div>
     <h2>Welcome!</h2>
-       <p>You are registered, {{ session.username }}</p><br>
+       <p>You are logged in, {{ session.username }}</p><br>
    {% else %}
        <p>You are not registered. Log in <a href="{{url_for('login')}}">here</a>.</p>
    {% endif %}
