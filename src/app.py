@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, render_template, request, session, url_for, redirect, jsonify
 import mysql.connector
 # Always use Flask.session instead of the Session object for direct access.
 from flask_session import Session
@@ -206,14 +206,28 @@ def get_appointment():
     return render_template('book-appointment.html', records=records)
 
 
-@app.route("/see-patients", methods=['POST', 'GET'])
-def see_patients():
-    if not session.get("username"):
+@app.route("/see-accounts", methods=['POST', 'GET'])
+def see_accounts():
+    msg = ''
+    if session.get("role") != 0:
         return redirect("/login")
-    mycursor.execute('SELECT username FROM users')
-    result = mycursor.fetchall()
-    usernames = [row[0] for row in result]
-    return render_template("see-patients.html", usernames=usernames)
+    if request.method == 'POST':
+        search_text = request.form['search_text']
+        mycursor.execute('SELECT * FROM users WHERE fname LIKE %s OR lname LIKE %s',
+                         (f'%{search_text}%', f'%{search_text}%'))
+        record = mycursor.fetchall()
+        if record:
+            users = [{'username': row[0], 'fname': row[3], 'lname': row[4], 'email': row[5], 'dob': row[6],
+                      'phone': row[7], 'address': row[8], 'city': row[9], 'state': row[10], 'zip': row[11],
+                      'insurance': row[12], 'history': row[13], 'billing': row[14], 'specialization': row[16]}
+                     for row in record]
+        else:
+            users = []
+            msg = "No users found"
+    else:
+        users = []
+    return render_template("see-accounts.html", users=users, msg=msg)
+
 
 def run_app(debug=True):
     app.run(debug=debug)

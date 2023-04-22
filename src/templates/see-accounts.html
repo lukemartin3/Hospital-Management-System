@@ -1,0 +1,102 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>See Accounts</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            width: 100%;
+        }
+        li {
+            float: right;
+        }
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        li a:hover {
+            background-color: #111;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        .table-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+        table {
+            text-align: center;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid black;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        input[type=text] {
+            padding: 5px;
+            margin: 5px;
+        }
+        .user-account-info {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            width: 300px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>See Accounts</h1>
+    <ul>
+        <li><a href="{{url_for('home')}}">Admin</a></li>
+    </ul><br><br><br>
+    <div class="container">
+        <form action="{{ url_for('see_accounts') }}" method="post">
+            <label for="search_text">Search by name:</label>
+            <input type="text" id="search_text" name="search_text" placeholder="Enter first OR last name"><br><br>
+            <input type="submit" value="Search">
+        </form>
+        {% if msg %}
+                <p>{{ msg }}</p>
+        {% endif %}
+        <div class="table-wrapper">
+            {% for user in users %}
+            <div class="user-account-info">
+                <h3>{{ user['fname'] }} {{ user['lname'] }}</h3>
+                <p>Username: {{ user['username'] }}</p>
+                <p>DOB: {{ user['dob'] }}</p>
+                <p>Address: {{ user['address'] }}, {{ user['city'] }}, {{ user['state'] }} {{ user['zip'] }}</p>
+                <p>Email: {{ user['email'] }}</p>
+                <p>Phone: {{ user['phone'] }}</p>
+                <p>Insurance: {{ user['insurance'] }}</p>
+                <p>Medical History: {{ user['history'] }}</p>
+                <p>Billing Information: ${{ user['billing'] }}</p>
+                <p>Specialization: {{ user['specialization'] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
