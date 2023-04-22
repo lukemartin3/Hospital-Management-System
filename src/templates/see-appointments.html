@@ -30,39 +30,47 @@
         form {
             text-align: center;
         }
-        .table-wrapper {
+        .appointment-info {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            width: 300px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            height: 10vh;
+            margin-top: 10px;
         }
-        table {
-            text-align: center;
-        }
+
     </style>
 </head>
 <body>
     <h1>Your Appointments</h1>
     <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
         <li><a href="{{url_for('home')}}">Home</a></li>
-        <li><a href="{{url_for('get_appointment')}}">Schedule Appointment</a></li>
     </ul><br><br><br>
-    <div class="table-wrapper">
-        <table>
-            <tr>
-                <th>Doctor</th>
-                <th>Date</th>
-                <th>Time</th>
-            </tr>
-            {% for appointment in appointments %}
-            <tr>
-                <td>{{ appointment[1] }}</td>
-                <td>{{ appointment[2] }}</td>
-                <td>{{ appointment[3] }}</td>
-            </tr>
+    <form action="{{url_for('see_appointments')}}" method="post">
+      <div class="container">
+        {% if appts %}
+            {% for appt in appts %}
+              <div class="appointment-info">
+                <input type="radio" name="appointment_id" value={{ appt['id'] }} required>
+                <h3>Dr. {{ appt['dr_fname'] }} {{ appt['dr_lname'] }}</h3>
+                <p>Specialization: {{ appt['specialty'] }}</p>
+                <p>Date: {{ appt['date'] }}</p>
+                <p>Time: {{ appt['time'] }}</p>
+                <p>Appointment Fee: ${{ appt['fee'] }}</p>
+              </div><br>
             {% endfor %}
-        </table>
+            <input type="submit" value="Delete Appointment">
+          {% else %}
+            <p>{{ msg }}</p>
+          {% endif %}
     </div>
-
+    </form>
 </body>
 </html>

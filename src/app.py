@@ -188,18 +188,27 @@ def schedule():
     return render_template("scheduling.html")
 
 
-# @app.route("/see-appointments", methods=['POST', 'GET'])
-# def see_appointments():
-#     if not session.get("username"):
-#         return redirect("/login")
-#     if request.method == "POST":
-#         pass # TODO: What should we do here?
-#     else:
-#         mycursor.execute('SELECT * FROM appointments WHERE username=%s', (session['username'],))
-#         appointments = mycursor.fetchall()
-#         return render_template("see-appointments.html", appointments=appointments)
-#
-#
+@app.route("/see-appointments", methods=['POST', 'GET'])
+def see_appointments():
+    msg=''
+    appts = []
+    if not session.get("username"):
+        return redirect("/login")
+    if request.method == "POST":
+        user = 'NULL'
+        appointment_id = request.form.get('appointment_id')
+        mycursor.execute('UPDATE appointments SET pat_username=%s WHERE id=%s', (user, appointment_id,))
+        msg = 'Successfully deleted appointment'
+    else:
+        mycursor.execute('SELECT * FROM appointments WHERE pat_username=%s', (session['username'],))
+        records = mycursor.fetchall()
+        if records:
+            appts = [{'id': row[0], 'dr_fname': row[1], 'dr_lname': row[2], 'specialty': row[3], 'date': row[4],
+                      'time': row[5], 'fee': row[6]}
+                     for row in records]
+    return render_template("see-appointments.html", appts=appts, msg=msg)
+
+
 @app.route("/book-appointment", methods=["POST", "GET"])
 def book_appointment():
     msg=''
@@ -207,10 +216,12 @@ def book_appointment():
     if not session.get("username"):
         return redirect("/login")
     if request.method == 'POST':
-        username = request.form.get('username')
         appointment_id = request.form.get('appointment_id')
-        mycursor.execute('UPDATE appointments SET pat_username=%s WHERE id=%s', (username, appointment_id,))
+        mycursor.execute('UPDATE appointments SET pat_username=%s WHERE id=%s', (session['username'], appointment_id,))
         con.commit()
+        # mycursor.execute('SELECT fee FROM appointments WHERE pat_username=%s', (session['username']))
+        # fee =
+        # mycursor.execute('UPDATE users SET billing WHERE ')
         msg = "Appointment booked successfully!"
     if 'specialty' in request.args:
         specialty = request.args.get('specialty')
