@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = 'pw'
-__DATABASE = 'db'
+__PASSWORD = '871056'
+__DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
 app.config['SESSION_TYPE'] = 'filesystem' 
@@ -57,13 +57,6 @@ def nurse_home():
         return redirect("/")
 
 
-@app.route("/admin")
-def admin():
-    if not session.get("username"):
-        return redirect("/login")
-    if session['username'] != 'admin':
-        return redirect("/")
-    return render_template("admin.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -238,6 +231,18 @@ def get_appointment():
             pass # TODO: add handling for invalid appointment IDs
     return render_template('book-appointment.html', records=records)
 
+#
+# ADMIN FUNCTIONS 
+#
+
+@app.route("/admin")
+def admin():
+    if not session.get("username"):
+        return redirect("/login")
+    if session['username'] != 'admin':
+        return redirect("/")
+    return render_template("admin.html")
+
 
 @app.route("/see-patients", methods=['POST', 'GET'])
 def see_patients():
@@ -248,6 +253,14 @@ def see_patients():
     usernames = [row[0] for row in result]
     return render_template("see-patients.html", usernames=usernames)
 
+@app.route('/billing-rates', methods=['GET', 'POST'])    
+def billing_rates():
+    # Check if user is logged in and is an admin
+    if 'username' not in session or session['username'] != 'admin':
+        return redirect(url_for('login'))
+    return render_template('billing-rates.html')
+
+    
 def run_app(debug=True):
     app.run(debug=debug)
 
