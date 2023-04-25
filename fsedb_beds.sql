@@ -16,34 +16,20 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `appointments`
+-- Table structure for table `beds`
 --
 
-DROP TABLE IF EXISTS `appointments`;
+DROP TABLE IF EXISTS `beds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `appointments` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `dr_fname` varchar(45) NOT NULL,
-  `dr_lname` varchar(45) NOT NULL,
-  `specialization` varchar(45) NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
-  `fee` decimal(10,2) NOT NULL,
+CREATE TABLE `beds` (
+  `bed_id` int NOT NULL,
+  `available` tinyint(1) DEFAULT '1',
   `pat_username` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`bed_id`),
+  UNIQUE KEY `bed_id_UNIQUE` (`bed_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `appointments`
---
-
-LOCK TABLES `appointments` WRITE;
-/*!40000 ALTER TABLE `appointments` DISABLE KEYS */;
-INSERT INTO `appointments` VALUES (1,'Luke','Martin','Oncology','2023-04-22','16:51:00',50.00,NULL),(2,'Luke','Martin','Oncology','2023-04-22','06:21:00',50.00,NULL),(3,'Luke','Martin','Oncology','2023-04-27','06:23:00',50.00,NULL),(4,'Luke','Martin','Oncology','2023-04-20','06:25:00',50.00,NULL),(5,'Luke','Martin','Oncology','2023-04-27','09:24:00',50.00,NULL);
-/*!40000 ALTER TABLE `appointments` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -54,4 +40,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-22 14:01:33
+-- Dump completed on 2023-04-25  3:03:21

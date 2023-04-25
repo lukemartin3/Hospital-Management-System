@@ -40,19 +40,11 @@ CREATE TABLE `users` (
   `billing` decimal(10,2) DEFAULT '0.00',
   `roles` tinyint(1) DEFAULT '1',
   `specialization` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`username`)
+  `prescription` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('admin','pbkdf2:sha256:260000$uL82lL7uLgWLA2zN$112bd7b4bfdba2d8a2f061a4289bccfc490fb03078a7c9a20f9d109e0c07b5f6','5020','Luke','Martin','admin@mail.com','2000-10-28','712-281-4090','5020 Christy Rd','Sioux City','IA','51106','Blue Cross Blue Shield','Shellfish',0.00,0,NULL),('drluke','pbkdf2:sha256:260000$vPGqfFZX0inTkET5$e62fa01cffd70577f702cb8bae21e09791f0ba00cf94b00fb99a7d3971244d94','5020','Luke','Martin','doctor@mail.com','2000-10-28','712-281-4090','5020 Christy Rd','Sioux City','IA','51106','Blue Cross Blue Shield','Shellfish',0.00,3,NULL),('lmartin9','pbkdf2:sha256:260000$1yx7ooktSiW0adnN$c68167d4cdbb5e3794a81e0e0386cd8a73c8cf0fc3dea975613aaece34a7bd36','5020','Luke','Martin','lmart5020@gmail.com','2000-10-28','712-281-4090','5020 Christy Rd','Sioux City','IA','51106','Blue Cross Blue Shield','Shellfish',0.00,1,NULL),('nurseluke','pbkdf2:sha256:260000$trdmpgxW2jndm0RL$0bdf95de3901d074cc0d7319317f73ddd5fb5d09859c4c856fb380b8c807262b','5020','Luke','Martin','nurse@mail.com','2000-10-28','712-281-4090','5020 Christy Rd','Sioux City','IA','51106','Blue Cross Blue Shield','Shellfish',0.00,2,NULL);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -63,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-21  0:02:38
+-- Dump completed on 2023-04-25  3:03:21

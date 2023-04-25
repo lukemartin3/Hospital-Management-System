@@ -31,6 +31,12 @@
         form {
             text-align: center;
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -40,15 +46,18 @@
         <li><a href="{{url_for('home')}}">Home</a></li>
     </ul><br><br><br>
     <form method="post" action="{{ url_for('schedule')}}">
-        <label for="username">Physician Username </label>
-        <input type="text" placeholder="username" id="username" name="username" required><br><br>
-        <label for="date">Date</label>
-        <input type="date" class="form-control" id="date" name="date" required><br><br>
-        <label for="time">Time</label>
-        <input type="time" class="form-control" id="time" name="time" required><br><br>
-        <label for="fee">Set Appointment Fee $</label>
-        <input type="number" id="fee" name="fee" required><br><br>
-        <button type="submit">Submit</button>
+        <div class="container">
+            <label for="username">Physician Username </label>
+            <input type="text" placeholder="username" id="username" name="username" required><br>
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required><br>
+            <label for="time">Time</label>
+            <input type="time" id="time" name="time" required><br>
+            <button type="submit">Submit</button>
+            {% if msg %}
+                <p>{{ msg }}</p>
+            {% endif %}
+        </div>
     </form>
 </body>
 </html>
