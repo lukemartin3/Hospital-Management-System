@@ -55,6 +55,10 @@
       </ul><br><br>
       <form action="{{url_for('assign_bed')}}" method="post">
       <div class="container">
+          <label>First Name:</label>
+          <input type="text" name="fname" id="fname"><br>
+          <label>Last Name:</label>
+          <input type="text" name="lname" id="lname"><br>
           <label>Enter patient Username:</label>
           <input placeholder="Username" type="text" name="username" id="username" required><br><br>
           <label>Select a Bed:</label><br><br>
@@ -62,7 +66,8 @@
             {% for bed in beds %}
               <div class="bed-info">
                 <input type="radio" name="bed_id" value={{ bed['bed_id'] }} required>
-                <h3>Bed Number: #{{ bed['bed_id'] }}</h3>
+                <h5>Bed Number: #{{ bed['bed_id'] }}</h5>
+                <p>Name: {{ bed['bed_id'] }}</p>
               </div><br>
           {% endfor %}
           <input type="submit" value="Assign Bed">

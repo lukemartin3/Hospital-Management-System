@@ -266,6 +266,7 @@ def see_accounts():
             msg = "No users found"
     return render_template("see-accounts.html", users=users, msg=msg)
 
+
 @app.route("/manage-beds", methods=['POST', 'GET'])
 def manage_beds():
     msg = ''
@@ -300,10 +301,10 @@ def assign_bed():
     if session.get("role") != 3:
         return redirect("/login")
     if request.method == 'POST':
-        appointment_id = request.form.get('appointment_id')
+        bed_id = request.form.get('bed_id')
         username = request.form.get('username')
-        mycursor.execute('UPDATE beds SET pat_username=%s WHERE bed_id=%s',
-                         (username, appointment_id,))
+        mycursor.execute('UPDATE beds SET pat_username=%s, available=0 WHERE bed_id=%s',
+                         (username, bed_id,))
         con.commit()
         msg = "Bed assigned successfully!"
     else:
@@ -314,6 +315,34 @@ def assign_bed():
                     for row in records]
         else:
             msg = "No users found"
+    return render_template("assign-bed.html", beds=beds, msg=msg)
+
+
+@app.route("/discharge-patient", methods=['POST', 'GET'])
+def discharge_patient():
+    msg=''
+    beds=[]
+    if session.get("role") != 3:
+        return redirect("/login")
+    if request.method == 'POST':
+        bed_id = request.form.get('bed_id')
+        username = request.form.get('username')
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        mycursor.execute('UPDATE beds SET available=1, pat_username IS NULL WHERE bed_id=%s',
+                         (username, bed_id,))
+        con.commit()
+        msg = "Patient successfully discharged!"
+    else:
+        mycursor.execute('SELECT * FROM appointments WHERE username=%s, pat_username', (session['username'],))
+        records = mycursor.fetchall()
+        mycursor.execute('SELECT * FROM users WHERE username=%s')
+        records2 = mycursor.fetchall()
+        if records:
+            beds = [{'bed_id': row[0]}
+                    for row in records]
+        else:
+            msg = "No appointments found"
     return render_template("assign-bed.html", beds=beds, msg=msg)
 
 

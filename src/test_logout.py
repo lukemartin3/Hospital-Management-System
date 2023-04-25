@@ -7,8 +7,8 @@ _TestLogout__HOST = 'localhost'
 #_TestLogout__USERNAME  = 'Topher1028'
 #_TestLogout__PASSWORD = 'fsedb'
 _TestLogout__USERNAME = 'root'
-_TestLogout__PASSWORD = '871056'
-_TestLogout__DATABASE = 'users'
+_TestLogout__PASSWORD = 'Topher1028'
+_TestLogout__DATABASE = 'fsedb'
 
 class TestLogout(unittest.TestCase):
 
