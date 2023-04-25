@@ -290,23 +290,31 @@ def manage_beds():
                 msg = 'Deleted bed number'
             else:
                 msg = 'Bed number is not found'
-    return render_template("manage_beds.html", msg=msg)
+    return render_template("manage-beds.html", msg=msg)
 
 
-# @app.route("/view-beds", methods=['POST', 'GET'])
-# def view_beds():
-#     beds=[]
-#     if session.get("role") != 3:
-#         return redirect("/login")
-#     if request.method == 'POST':
-#         mycursor.execute('SELECT * FROM beds WHERE availability=%s', (1,))
-#         record = mycursor.fetchall()
-#         if record:
-#             beds = [{'bed_id': row[0]}
-#                      for row in record]
-#         else:
-#             msg = "No users found"
-#     return render_template("see-accounts.html", beds=beds, msg=msg)
+@app.route("/assign-bed", methods=['POST', 'GET'])
+def assign_bed():
+    msg=''
+    beds=[]
+    if session.get("role") != 3:
+        return redirect("/login")
+    if request.method == 'POST':
+        appointment_id = request.form.get('appointment_id')
+        username = request.form.get('username')
+        mycursor.execute('UPDATE beds SET pat_username=%s WHERE bed_id=%s',
+                         (username, appointment_id,))
+        con.commit()
+        msg = "Bed assigned successfully!"
+    else:
+        mycursor.execute('SELECT * FROM beds WHERE available=%s', (1,))
+        records = mycursor.fetchall()
+        if records:
+            beds = [{'bed_id': row[0]}
+                    for row in records]
+        else:
+            msg = "No users found"
+    return render_template("assign-bed.html", beds=beds, msg=msg)
 
 
 def run_app(debug=True):
