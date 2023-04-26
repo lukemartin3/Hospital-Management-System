@@ -39,5 +39,23 @@
         <li><a href="{{url_for('admin')}}">Admin</a></li>
         <li><a href="{{url_for('see_patients')}}">See Patients</a></li>
     </ul><br><br><br>
+    <style>
+    div {text-align: center;}
+    </style>
+    <div>
+        <h3>Add New Procedure</h3>
+        <form method="POST" action="{{ url_for('billing_rates') }}">
+          <label for="new_procedure">Procedure Name:</label>
+          <input type="text" id="new_procedure" name="new_procedure"><br><br>
+          <label for="new_rate">Procedure Cost:</label>
+          <input type="text" id="new_rate" name="new_rate"><br><br>
+          <input type="submit" value="Add Procedure">
+          {% if msg %}
+            <p>{{ msg }}</p>
+          {% endif %}
+        </form>
+
+
+    </div>
 </body>
 </html>
