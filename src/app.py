@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '871056'
+__PASSWORD = '5crNoOdN1331'
 __DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -400,6 +400,22 @@ def billing_rates():
     mycursor.execute('SELECT * FROM billing_rates')    
     billing_rates = mycursor.fetchall()
     return render_template('billing-rates.html', billing_rates = billing_rates, msg = msg)
+
+@app.route('/invoice_patient', methods=['GET', 'POST'])    
+def invoice_patient():
+    msg = ''
+    users = []
+    if request.method == "POST":
+        username = request.form.get('username')
+        mycursor.execute('SELECT * FROM users WHERE username=%s', (username,))
+        record = mycursor.fetchall()
+        if record:
+            users = [{'username': row[0], 'fname': row[3], 'lname': row[4], 'email': row[5],
+                      'phone': row[7], 'address': row[8], 'city': row[9], 'state': row[10], 'zip': row[11], 'billing': row[14]}
+                     for row in record]
+        else:
+            msg = "No users found"
+    return render_template('invoice-patient.html', users=users, msg=msg)
 
 
 def run_app(debug=True):
