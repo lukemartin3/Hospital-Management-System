@@ -38,18 +38,26 @@
     <h1>Home</h1>
     <div>
         <ul>
-            {% if session.get("username") == 'admin' %}
+            {% if session.get("role") == 0 %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
-                <li><a href="{{ url_for('admin') }}">Admin</a></li>
+                <li><a href="{{url_for('assign_roles')}}">Create Physician/Nurse</a></li>
+                <li><a href="{{url_for('schedule')}}">Set Doctor Schedule</a></li>
+                <li><a href="{{url_for('see_accounts')}}">See Accounts</a></li>
+                <li><a href="{{url_for('manage_beds')}}">Create/Delete Bed</a></li>
+            {% elif session.get("role") == 2 %}
+                <li><a href="{{url_for('logout')}}">Logout</a></li>
+            {% elif session.get("role") == 3 %}
+                <li><a href="{{url_for('logout')}}">Logout</a></li>
+                <li><a href="{{url_for('assign_bed')}}">Assign Patient Bed</a></li>
             {% else %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
-                <li><a href="{{url_for('get_appointment')}}">Schedule Appointment</a></li>
+                <li><a href="{{url_for('book_appointment')}}">Schedule Appointment</a></li>
             {% endif %}
         </ul>
     </div>
     <h2>Welcome!</h2>
-       <p>You are registered, {{ session.username }}</p><br>
+       <p>You are logged in, {{ session.username }}</p><br>
    {% else %}
        <p>You are not registered. Log in <a href="{{url_for('login')}}">here</a>.</p>
    {% endif %}

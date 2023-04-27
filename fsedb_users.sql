@@ -16,18 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `beds`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `beds`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `beds` (
-  `bed_id` int NOT NULL,
-  `available` tinyint(1) DEFAULT '1',
-  `pat_username` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`bed_id`),
-  UNIQUE KEY `bed_id_UNIQUE` (`bed_id`)
+CREATE TABLE `users` (
+  `username` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `pin` varchar(4) NOT NULL,
+  `fname` varchar(45) NOT NULL,
+  `lname` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `dob` date NOT NULL,
+  `phone` varchar(12) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  `city` varchar(45) NOT NULL,
+  `states` varchar(45) NOT NULL,
+  `zip` varchar(5) NOT NULL,
+  `insurance` varchar(45) NOT NULL,
+  `history` varchar(255) NOT NULL,
+  `billing` decimal(10,2) DEFAULT '0.00',
+  `roles` tinyint(1) DEFAULT '1',
+  `specialization` varchar(45) DEFAULT NULL,
+  `prescription` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -8,7 +8,7 @@ _TestLogout__HOST = 'localhost'
 #_TestLogout__PASSWORD = 'fsedb'
 _TestLogout__USERNAME = 'root'
 _TestLogout__PASSWORD = '871056'
-_TestLogout__DATABASE = 'fsedb'
+_TestLogout__DATABASE = 'users'
 
 #def connect():
 #        try:

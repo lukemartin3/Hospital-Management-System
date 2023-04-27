@@ -35,6 +35,12 @@
             text-align: center;
             color: red;
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -42,25 +48,48 @@
     <ul>
         <li><a href="{{url_for('login')}}">Login</a></li>
     </ul><br><br><br>
-    <form action="{{url_for('register_new_user')}}" method="post">
+    <form action="{{url_for('register')}}" method="post">
+    <div class="container">
         <label>Username: </label>
-        <input placeholder="Name" type="text" name="username" id="username" required><br><br>
-        <label>Email: </label>
-        <input placeholder="name@server.com" type="text" name="email" id="email" required><br><br>
+        <input placeholder="Name" type="text" name="username" id="username" required><br>
         <label>Password: </label>
-        <input placeholder="secure password" type="password" name="password" id="password" required><br><br>
+        <input placeholder="secure password" type="password" name="password" id="password" required><br>
         <label>Repeat Password: </label>
-        <input placeholder="same password" type="password" name="password_confirm" id="password_confirm" required><br><br>
+        <input placeholder="same password" type="password" name="password_confirm" id="password_confirm" required><br>
+        <label>Email: </label>
+        <input placeholder="name@server.com" type="text" name="email" id="email" required><br>
         <label>Unique 4 Digit Pin: </label>
-        <input placeholder="pin" type="text" name="four_pin" id="four_pin" required><br><br>
-        <label>Doctor:</label>
-        <input type="checkbox" name="doctor"><br><br>
-        <label>Nurse:</label>
-        <input type="checkbox" name="nurse"><br><br>
+        <input placeholder="pin" type="text" name="four_pin" id="four_pin" required><br>
+        <label>First Name: </label>
+        <input placeholder="John" type="text" name="first_name" id="first_name" required><br>
+        <label>Last Name: </label>
+        <input placeholder="Doe" type="text" name="last_name" id="last_name" required><br>
+        <label>Date of Birth: </label>
+        <input class="form-control" type="date" name="dob" id="dob" required><br>
+        <label>phone Number: </label>
+        <input placeholder="123-456-7890" type="text" name="phone" id="phone" required><br>
+        <label>Address: </label>
+        <input placeholder="123 main st." type="text" name="address" id="address" required><br>
+        <label>City: </label>
+        <input placeholder="Iowa City" type="text" name="city" id="city" required><br>
+        <label>State: </label>
+        <input placeholder="IA" type="text" name="state" id="state" required><br>
+        <label>Zip Code: </label>
+        <input placeholder="12345" type="text" name="zip" id="zip" required><br>
+        <label>Health insurance Provider: </label>
+            <select name="insurance" id="insurance">
+              <option value="Blue Cross Blue Shield">Blue Cross Blue Shield</option>
+              <option value="United">United</option>
+              <option value="Anthem">Anthem</option>
+            </select><br>
+        <label>Medical History (N/A if this doesn't apply): </label>
+        <textarea placeholder="List any allergies / past health problems" name="med_history" id="med_history"
+                   maxlength="250" required></textarea><br>
         <input type="submit" value="Register">
         {% if msg %}
             <p>{{ msg }}</p>
         {% endif %}
+    </div>
     </form><br>
 </body>
 </html>
