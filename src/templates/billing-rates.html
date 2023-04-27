@@ -30,14 +30,20 @@
         form {
             text-align: center;
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Admin</h1>
     <h2>Billing Rates</h2>
     <ul>
-        <li><a href="{{url_for('admin')}}">Admin</a></li>
-        <li><a href="{{url_for('see_patients')}}">See Patients</a></li>
+        <li><a href="{{url_for('home')}}">Admin</a></li>
+        <li><a href="{{url_for('see_accounts')}}">See Patients</a></li>
     </ul><br><br><br>
     <style>
     div {text-align: center;}
@@ -57,7 +63,9 @@
 
 
     </div>
-    <div>
+    <br><br>
+    <div class="container">
+
         <table>
             <thead>
               <tr>
