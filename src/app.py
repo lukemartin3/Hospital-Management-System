@@ -264,12 +264,6 @@ def book_appointment():
         return redirect("/login")
     if request.method == 'POST':
         appointment_id = request.form.get('appointment_id')
-        
-        
-        
-
-        
-        
         mycursor.execute('UPDATE appointments SET pat_username=%s WHERE appt_id=%s', (session['username'], appointment_id,))
         con.commit()
         msg = "Appointment booked successfully!"
@@ -380,6 +374,33 @@ def discharge_patient():
     result = mycursor.fetchall()
     usernames = [row[0] for row in result]
     return render_template("see-patients.html", usernames=usernames)
+
+@app.route('/billing-rates', methods=['GET', 'POST'])    
+def billing_rates():
+    msg = ''
+    # Check if user is logged in and is an admin
+    if 'username' not in session or session['username'] != 'admin':
+        return redirect(url_for('login'))
+    # Fetch current billing rates    
+    if request.method == 'POST':
+        if 'new_procedure' in request.form and 'new_rate' in request.form:
+            procedure = request.form['new_procedure']
+            rate = request.form['new_rate']
+            # Check if procedure exists
+
+            mycursor.execute('SELECT * FROM billing_rates WHERE procedures = %s', (procedure,))
+            existing_procedure = mycursor.fetchone()
+            if existing_procedure:
+                mycursor.execute("UPDATE billing_rates SET rate = %s WHERE procedures = %s", (rate, procedure))
+                msg = 'New Rate Applied'
+            else:
+                mycursor.execute('INSERT INTO billing_rates (procedures, rate) VALUES (%s, %s)', (procedure, rate))
+                msg = 'Procedure has been added'
+            con.commit()
+    mycursor.execute('SELECT * FROM billing_rates')    
+    billing_rates = mycursor.fetchall()
+    return render_template('billing-rates.html', billing_rates = billing_rates, msg = msg)
+
 
 def run_app(debug=True):
     app.run(debug=debug)
