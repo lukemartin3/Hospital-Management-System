@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Invoice Patient</title>
+    <title>Discharge Patient</title>
     <style>
         ul {
             list-style-type: none;
@@ -40,7 +40,7 @@
             padding: 5px;
             margin: 5px;
         }
-        .user-account-info {
+        .bed-info {
             display: flex;
             flex-direction: column;
             margin: 10px;
@@ -57,32 +57,30 @@
     </style>
 </head>
 <body>
-    <h1>Invoice Patient</h1>
+    <h1>Discharge Patient</h1>
     <ul>
         <li><a href="{{url_for('logout')}}">Logout</a></li>
         <li><a href="{{url_for('home')}}">Home</a></li>
     </ul><br><br><br>
     <div class="container">
-        <form action="{{ url_for('invoice_patient') }}" method="post">
-            <label for="username">Patient Username:</label>
-            <input type="text" id="username" name="username"><br><br>
+        <form action="{{ url_for('discharge_patient') }}" method="post">
+            <label for="search_text">Search by name:</label>
+            <input type="text" name="search_text" placeholder="Enter patient username"><br><br>
             <input type="submit" value="Search">
         </form>
         {% if msg %}
                 <p>{{ msg }}</p>
         {% endif %}
         <div class="table-wrapper">
-            {% for user in users %}
-            <div class="user-account-info">
-                <h3>{{ user['fname'] }} {{ user['lname'] }}</h3>
-                <p>Username: {{ user['username'] }}</p>
-                <p>Address: {{ user['address'] }}, {{ user['city'] }}, {{ user['state'] }} {{ user['zip'] }}</p>
-                <p>Email: {{ user['email'] }}</p>
-                <p>Phone: {{ user['phone'] }}</p>
-                <p>Amount Owed: ${{ user['billing'] }}</p>
+            {% for bed in beds %}
+            <div class="bed-info">
+                <input type="radio" name="bed_id" value={{ bed['bed_id'] }} required>
+                <p>bed ID: {{ bed['bed_id'] }}</p>
+                <p>Patient Username: {{ bed['pat_username'] }}</p>
             </div>
             {% endfor %}
         </div>
+    <input type="submit" value="Delete Appointment"><br>
     </div>
 </body>
 </html>
