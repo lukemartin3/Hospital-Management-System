@@ -5,7 +5,6 @@ from flask_session import Session
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 app = Flask(__name__)
 
 __HOST = 'localhost'
@@ -403,11 +402,8 @@ def invoice_patient():
                      for row in record]
         else:
             msg = "No users found"
-        users[0].update(extras[0])
     return render_template('invoice-patient.html', users=users, msg=msg)
 
-def Merge(dict1, dict2):
-    return(dict2.update(dict1))
 
 @app.route('/assign-procedure', methods=['GET', 'POST'])    
 def assign_procedure():
@@ -428,18 +424,20 @@ def assign_procedure():
     return render_template('assign-procedure.html', msg=msg)
 
 
-#
-# @app.route('/make-payment', methods=['GET', 'POST'])
-# def make_payment():
-#     msg=''
-#     billing=[]
-#     if session.get("role") != 1:
-#         return redirect("/login")
-#     if request.method == 'POST':
-#         mycursor.execute('SELECT billing FROM users WHERE username=%', (session['username'],))
-#         record = mycursor.fetchone()
-#         if record:
-
+@app.route('/make-payment', methods=['GET', 'POST'])
+def make_payment():
+    msg=''
+    billing=[]
+    if session.get("role") != 1:
+        return redirect("/login")
+    if request.method == 'POST':
+        mycursor.execute('UPDATE users SET billing=0.00 WHERE username=%s', (session['username'],))
+        msg = "Payment Success!"
+    else:
+        mycursor.execute('SELECT billing FROM users WHERE username=%s', (session['username'],))
+        record = mycursor.fetchone()
+        billing = "{:.2f}".format(record[0])
+    return render_template("make-payment.html", billing=billing, msg=msg)
 
 # @app.route("/discharge-patient", methods=['POST', 'GET'])
 # def discharge_patient():

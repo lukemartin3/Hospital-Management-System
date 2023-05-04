@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make Payment</title>
+    <style>
+        body {
+        text-align: center;
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+        width: 100%;
+      }
+      li {
+        float: right;
+      }
+      li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+      li a:hover {
+        background-color: #111;
+      }
+        .exp-input {
+            width: 45px;
+          }
+        .cvc-input {
+            width: 25px;
+          }
+        .postal-input {
+            width: 40px;
+          }
+        .input-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-row label {
+            margin-right: 5px;
+            margin-left: 25px;
+        }
+    </style>
+</head>
+<body>
+<h1>Make Payment</h1>
+    <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('home')}}">Home</a></li>
+    </ul><br><br><br>
+        <form action="{{url_for('make_payment')}}" method="post">
+            <div class="container">
+                <h2>Bill Due:</h2>
+                <h3>${{billing}}</h3>
+                <div class="input-row">
+                    <label>Card Number</label>
+                    <input type="text" placeholder="1234 1234 1234 1234" maxlength="15" required>
+                </div><br>
+                <div class="input-row">
+                    <label>Expiration</label>
+                    <input type="text" class="exp-input" placeholder="MM/YY" maxlength="5" required>
+                    <label>CVC</label>
+                    <input type="text" class="cvc-input" placeholder="123" maxlength="3" required>
+                    <label>Postal Code</label>
+                    <input type="text" class="postal-input" placeholder="12345" maxlength="5" required>
+                </div><br>
+                <input type="submit" value="Submit"><br>
+                {% if msg %}
+                    <p>{{ msg }}</p>
+                {% endif %}
+            </div>
+        </form>
+</body>
+</html>
