@@ -384,6 +384,7 @@ def billing_rates():
     billing_rates = mycursor.fetchall()
     return render_template('nurse/billing-rates.html', billing_rates=billing_rates, msg=msg)
 
+
 @app.route('/invoice_patient', methods=['GET', 'POST'])
 def invoice_patient():
     msg = ''
@@ -476,6 +477,7 @@ def inbox():
             messages = [{'notif_id': row[0], 'message': row[2], 'sender': row[3]}
                         for row in record]
     return render_template("patient/inbox.html", messages=messages, msg=msg)
+
 
 @app.route("/discharge-patient", methods=['POST', 'GET'])
 def discharge_patient():
