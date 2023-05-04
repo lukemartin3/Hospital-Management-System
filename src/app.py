@@ -432,12 +432,55 @@ def make_payment():
         return redirect("/login")
     if request.method == 'POST':
         mycursor.execute('UPDATE users SET billing=0.00 WHERE username=%s', (session['username'],))
+        con.commit()
         msg = "Payment Success!"
     else:
         mycursor.execute('SELECT billing FROM users WHERE username=%s', (session['username'],))
         record = mycursor.fetchone()
         billing = "{:.2f}".format(record[0])
     return render_template("patient/make-payment.html", billing=billing, msg=msg)
+
+
+@app.route('/notification', methods=['GET', 'POST'])
+def notification():
+    msg=''
+    if session.get("role") == 1:
+        return redirect("/login")
+    if request.method == 'POST':
+        pat_username = request.form.get('pat_username')
+        message = request.form.get('message')
+        role = request.form.get('role')
+        lname = request.form.get('lname')
+        print(pat_username)
+        print(message)
+        print(role)
+        print(lname)
+        sender = role + ' ' + lname
+        mycursor.execute('INSERT INTO notification (pat_username, message, sender) VALUES (%s, %s, %s)',
+                         (pat_username, message, sender))
+        con.commit()
+        msg = "Notification message successfully sent to Patient"
+    return render_template("all/notification.html", msg=msg)
+
+
+@app.route('/inbox', methods=['GET', 'POST'])
+def inbox():
+    msg=''
+    messages=[]
+    if session.get("role") != 1:
+        return redirect("/login")
+    if request.method == 'POST':
+        notif_id = request.form.get('notif_id')
+        mycursor.execute('DELETE FROM notification WHERE notif_id=%s', (notif_id,))
+        con.commit()
+        msg = "Message Deleted"
+    else:
+        mycursor.execute('SELECT * FROM notification WHERE pat_username=%s', (session['username'],))
+        record = mycursor.fetchall()
+        if record:
+            messages = [{'notif_id': row[0], 'message': row[2], 'sender': row[3]}
+                        for row in record]
+    return render_template("patient/inbox.html", messages=messages, msg=msg)
 
 # @app.route("/discharge-patient", methods=['POST', 'GET'])
 # def discharge_patient():

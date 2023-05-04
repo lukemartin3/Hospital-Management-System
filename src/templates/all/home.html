@@ -47,20 +47,23 @@
                 <li><a href="{{url_for('billing_rates')}}">Billing Rates</a></li>
                 <li><a href="{{url_for('invoice_patient')}}">Invoice Patient</a></li>
                 <li><a href="{{url_for('assign_procedure')}}">Assign Procedure</a></li>
+                <li><a href="{{url_for('notification')}}">Send Notification</a></li>
             {% elif session.get("role") == 2 %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('billing_rates')}}">Billing Rates</a></li>
+                <li><a href="{{url_for('notification')}}">Send Notification</a></li>
 {#                <li><a href="{{url_for('discharge_patient')}}">Discharge Patient</a></li>#}
             {% elif session.get("role") == 3 %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('assign_bed')}}">Assign Patient Bed</a></li>
+                <li><a href="{{url_for('notification')}}">Send Notification</a></li>
 {#                <li><a href="{{url_for('discharge_patient')}}">Discharge Patient</a></li>#}
             {% else %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('see_appointments')}}">See Appointments</a></li>
                 <li><a href="{{url_for('book_appointment')}}">Schedule Appointment</a></li>
                 <li><a href="{{url_for('make_payment')}}">Make Payment</a></li>
-
+                <li><a href="{{url_for('inbox')}}">Inbox</a></li>
             {% endif %}
         </ul>
     </div>

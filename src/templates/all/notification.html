@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification</title>
+    <style>
+        body {
+        text-align: center;
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+        width: 100%;
+      }
+      li {
+        float: right;
+      }
+      li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+      li a:hover {
+        background-color: #111;
+      }
+      .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+      .message-input {
+            width: 400px;
+            height: 150px;
+          }
+      textarea {
+			width: 100%;
+			height: 100px;
+			resize: none;
+		}
+      .input-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-row label {
+            margin-right: 5px;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h1>Send Notification</h1>
+    <ul>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('home')}}">Home</a></li>
+        <li><a href="{{url_for('see_accounts')}}">See Accounts</a></li>
+    </ul><br><br><br>
+        <form action="{{url_for('notification')}}" method="post">
+            <div class="container">
+                <label>Patient Username: </label>
+                <input type="text" name="pat_username" required><br>
+                <label>Message: </label>
+                <textarea type="text" name="message" class="message-input" required></textarea><br>
+                <div class="input-row">
+                    <label>Role title</label>
+                    <select name="role" required>
+                          <option value="Admin">Admin</option>
+                          <option value="Dr.">Physician</option>
+                          <option value="Nurse">Nurse</option>
+                    </select><br>
+                    <label>Sender Last Name</label>
+                    <input type="text" name="lname" required>
+                </div><br>
+                <input type="submit" value="Submit"><br>
+                {% if msg %}
+                    <p>{{ msg }}</p>
+                {% endif %}
+            </div>
+        </form>
+</body>
+</html>
