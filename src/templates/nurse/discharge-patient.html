@@ -24,7 +24,7 @@
         li a:hover {
             background-color: #111;
         }
-        h1 {
+        h1, h3 {
             text-align: center;
         }
         form {
@@ -34,7 +34,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 80vh;
+            height: 30vh;
         }
         input[type=text] {
             padding: 5px;
@@ -61,26 +61,24 @@
     <ul>
         <li><a href="{{url_for('logout')}}">Logout</a></li>
         <li><a href="{{url_for('home')}}">Home</a></li>
-    </ul><br><br><br>
+    </ul><br><br>
+    <h3>Select patient to discharge from bed</h3>
     <div class="container">
         <form action="{{ url_for('discharge_patient') }}" method="post">
-            <label for="search_text">Search by name:</label>
-            <input type="text" name="search_text" placeholder="Enter patient username"><br><br>
-            <input type="submit" value="Search">
-        </form>
-        {% if msg %}
-                <p>{{ msg }}</p>
-        {% endif %}
         <div class="table-wrapper">
             {% for bed in beds %}
-            <div class="bed-info">
-                <input type="radio" name="bed_id" value={{ bed['bed_id'] }} required>
-                <p>bed ID: {{ bed['bed_id'] }}</p>
-                <p>Patient Username: {{ bed['pat_username'] }}</p>
-            </div>
+                <div class="bed-info">
+                    <input type="radio" name="bed_id" value={{ bed['bed_id'] }} required>
+                    <p>bed ID: {{ bed['bed_id'] }}</p>
+                    <p>Patient Username: {{ bed['pat_username'] }}</p>
+                </div>
             {% endfor %}
         </div>
-    <input type="submit" value="Delete Appointment"><br>
+        <input type="submit" value="Discharge Patient"><br>
+        </form>
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% endif %}
     </div>
 </body>
 </html>

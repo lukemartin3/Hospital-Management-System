@@ -477,29 +477,31 @@ def inbox():
                         for row in record]
     return render_template("patient/inbox.html", messages=messages, msg=msg)
 
-# @app.route("/discharge-patient", methods=['POST', 'GET'])
-# def discharge_patient():
-#     msg=''
-#     beds=[]
-#     print(session.get("role"))
-#     if session.get("role") != 3:
-#         return redirect("/login")
-#     if request.method == 'POST':
-#         search_text = request.form['search_text']
-#         mycursor.execute('SELECT * FROM beds WHERE pat_username=%s',
-#                          (f'%{search_text}%',))
-#         record = mycursor.fetchall()
-#         if record:
-#             beds = [{'bed_id': row[0], 'pat_username': row[2]}
-#                     for row in record]
-#         else:
-#             msg = "no patients found"
-#         if request.method == 'POST':
-#             bed_id = request.form.get('bed_id')
-#             mycursor.execute('UPDATE beds SET pat_username=NULL WHERE bed_id=%s', (bed_id,))
-#             con.commit()
-#             msg = 'Successfully discharged patient'
-#     return render_template("discharge-patient.html", beds=beds, msg=msg)
+@app.route("/discharge-patient", methods=['POST', 'GET'])
+def discharge_patient():
+    msg=''
+    beds=[]
+    if session.get("role") != 2:
+        return redirect("/login")
+    if request.method == 'POST':
+        bed_id = request.form.get('bed_id')
+        mycursor.execute('SELECT * FROM beds WHERE bed_id=%s', (bed_id,))
+        record = mycursor.fetchone()
+        if record:
+            mycursor.execute('UPDATE beds SET available=1, pat_username=NULL WHERE bed_id=%s', (bed_id,))
+            con.commit()
+            msg = 'Patient successfully discharged'
+        else:
+            msg = 'Bed number is not found'
+    else:
+        mycursor.execute('SELECT * FROM beds WHERE available=0')
+        records = mycursor.fetchall()
+        if records:
+            beds = [{'bed_id': row[0], 'pat_username': row[2]}
+                    for row in records]
+        else:
+            msg = 'No occupied beds'
+    return render_template("nurse/discharge-patient.html", beds=beds, msg=msg)
 
 def run_app(debug=True):
     app.run(debug=debug)

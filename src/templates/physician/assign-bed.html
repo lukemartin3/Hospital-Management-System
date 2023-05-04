@@ -55,13 +55,9 @@
       </ul><br><br>
       <form action="{{url_for('assign_bed')}}" method="post">
       <div class="container">
-{#          <label>First Name:</label>#}
-{#          <input type="text" name="fname" id="fname"><br>#}
-{#          <label>Last Name:</label>#}
-{#          <input type="text" name="lname" id="lname"><br>#}
-          <label>Enter patient Username:</label>
+          <h3>Enter patient Username:</h3>
           <input placeholder="Username" type="text" name="username" id="username" required><br><br>
-          <label>Select a Bed:</label><br><br>
+          <h3>Select a Bed:</h3><br><br>
           {% if beds %}
             {% for bed in beds %}
               <div class="bed-info">
@@ -70,7 +66,7 @@
                 <p>Name: {{ bed['bed_id'] }}</p>
               </div><br>
           {% endfor %}
-          <input type="submit" value="Assign Bed">
+          <input type="submit" value="Assign Bed"><br>
           {% else %}
             <p>{{ msg }}</p>
           {% endif %}

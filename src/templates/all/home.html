@@ -52,7 +52,7 @@
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('billing_rates')}}">Billing Rates</a></li>
                 <li><a href="{{url_for('notification')}}">Send Notification</a></li>
-{#                <li><a href="{{url_for('discharge_patient')}}">Discharge Patient</a></li>#}
+                <li><a href="{{url_for('discharge_patient')}}">Discharge Patient</a></li>
             {% elif session.get("role") == 3 %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
                 <li><a href="{{url_for('assign_bed')}}">Assign Patient Bed</a></li>
