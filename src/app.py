@@ -39,7 +39,7 @@ mycursor = con.cursor()
 def home():
     if not session.get("username"):
         return redirect("/login")
-    return render_template('home.html')
+    return render_template('all/home.html')
 
 
 @app.route('/assign_roles', methods=["POST", "GET"])
@@ -65,7 +65,7 @@ def assign_roles():
                 msg = 'Successfully created Physician!'
         else:
             msg = 'Username not found'
-    return render_template('assign-role.html', msg=msg)
+    return render_template('admin/assign-role.html', msg=msg)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -84,7 +84,7 @@ def login():
             return redirect(url_for('home'))
         else:
             msg="Incorrect username or password"
-    return render_template('login.html', msg=msg)
+    return render_template('all/login.html', msg=msg)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -134,7 +134,7 @@ def register():
                 session['loggedin'] = True
                 session['username'] = username
                 return redirect(url_for('home'))
-    return render_template('registration.html', msg=msg)
+    return render_template('all/registration.html', msg=msg)
 
 
 @app.route("/forgot-password", methods=["POST", "GET"])
@@ -172,8 +172,8 @@ def forgot_password():
                 msg2.body = "here is your 4 digit pin: " + str(send_pin[0])
                 mail.send(msg2)
 
-        return render_template('forgot-password.html', msg=msg)
-    return render_template("forgot-password.html", msg=msg)
+        return render_template('all/forgot-password.html', msg=msg)
+    return render_template("all/forgot-password.html", msg=msg)
 
 
 @app.route("/reset-password", methods=["POST", "GET"])
@@ -193,7 +193,7 @@ def reset():
             session['username'] = username  #record[0]
             print("this is current session username", session['username'])
             return redirect(url_for('login'))
-    return render_template('reset-password.html', msg=msg)
+    return render_template('all/reset-password.html', msg=msg)
     
 
 @app.route("/logout")
@@ -226,7 +226,7 @@ def schedule():
             msg = 'Successfully scheduled physician'
         else:
             msg = 'Invalid username'
-    return render_template("scheduling.html", msg=msg)
+    return render_template("admin/scheduling.html", msg=msg)
 
 
 @app.route("/see-appointments", methods=['POST', 'GET'])
@@ -250,7 +250,7 @@ def see_appointments():
                      for row in records]
         else:
             msg = 'No appointments found'
-    return render_template("see-appointments.html", appts=appts, msg=msg)
+    return render_template("patient/see-appointments.html", appts=appts, msg=msg)
 
 
 @app.route("/book-appointment", methods=["POST", "GET"])
@@ -274,7 +274,7 @@ def book_appointment():
                      for row in records]
         else:
             msg = "No appointments found"
-    return render_template('book-appointment.html', appts=appts, msg=msg)
+    return render_template('patient/book-appointment.html', appts=appts, msg=msg)
 
 
 @app.route("/see-accounts", methods=['POST', 'GET'])
@@ -295,7 +295,7 @@ def see_accounts():
                      for row in record]
         else:
             msg = "No users found"
-    return render_template("see-accounts.html", users=users, msg=msg)
+    return render_template("admin/see-accounts.html", users=users, msg=msg)
 
 
 @app.route("/manage-beds", methods=['POST', 'GET'])
@@ -331,7 +331,7 @@ def manage_beds():
                     for row in records]
         else:
             msg = "No beds found"
-    return render_template("manage-beds.html", beds=beds, msg=msg)
+    return render_template("admin/manage-beds.html", beds=beds, msg=msg)
 
 
 @app.route("/assign-bed", methods=['POST', 'GET'])
@@ -355,7 +355,7 @@ def assign_bed():
                     for row in records]
         else:
             msg = "No users found"
-    return render_template("assign-bed.html", beds=beds, msg=msg)
+    return render_template("physician/assign-bed.html", beds=beds, msg=msg)
 
 
 @app.route('/billing-rates', methods=['GET', 'POST'])
@@ -382,7 +382,7 @@ def billing_rates():
             con.commit()
     mycursor.execute('SELECT * FROM billing_rates')
     billing_rates = mycursor.fetchall()
-    return render_template('billing-rates.html', billing_rates = billing_rates, msg = msg)
+    return render_template('nurse/billing-rates.html', billing_rates=billing_rates, msg=msg)
 
 @app.route('/invoice_patient', methods=['GET', 'POST'])
 def invoice_patient():
@@ -402,7 +402,7 @@ def invoice_patient():
                      for row in record]
         else:
             msg = "No users found"
-    return render_template('invoice-patient.html', users=users, msg=msg)
+    return render_template('admin/invoice-patient.html', users=users, msg=msg)
 
 
 @app.route('/assign-procedure', methods=['GET', 'POST'])    
@@ -421,7 +421,7 @@ def assign_procedure():
             msg = "Successfully added procedure for user."
         else:
             msg = "Incorrect username, procedure, or email. Please verify the information entered is correct."
-    return render_template('assign-procedure.html', msg=msg)
+    return render_template('admin/assign-procedure.html', msg=msg)
 
 
 @app.route('/make-payment', methods=['GET', 'POST'])
@@ -437,7 +437,7 @@ def make_payment():
         mycursor.execute('SELECT billing FROM users WHERE username=%s', (session['username'],))
         record = mycursor.fetchone()
         billing = "{:.2f}".format(record[0])
-    return render_template("make-payment.html", billing=billing, msg=msg)
+    return render_template("patient/make-payment.html", billing=billing, msg=msg)
 
 # @app.route("/discharge-patient", methods=['POST', 'GET'])
 # def discharge_patient():
