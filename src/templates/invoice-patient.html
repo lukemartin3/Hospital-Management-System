@@ -76,10 +76,15 @@
             <div class="user-account-info">
                 <h3>{{ user['fname'] }} {{ user['lname'] }}</h3>
                 <p>Username: {{ user['username'] }}</p>
-                <p>Address: {{ user['address'] }}, {{ user['city'] }}, {{ user['state'] }} {{ user['zip'] }}</p>
                 <p>Email: {{ user['email'] }}</p>
-                <p>Phone: {{ user['phone'] }}</p>
-                <p>Amount Owed: ${{ user['billing'] }}</p>
+                <p>Amount Owed: ${{ user['price'] }}</p>
+                <p>First name: {{ user['fname'] }}</p>
+                <p>Last name: {{ user['lname'] }}</p>
+                <p>Phone number: {{ user['phone'] }}</p>
+                <p>Address: {{ user['address'] }}</p>
+                <p>City: ${{ user['city'] }}</p>
+                <p>State: {{ user['state'] }}</p>
+                <p>Zip code: {{ user['zip'] }}</p>
             </div>
             {% endfor %}
         </div>

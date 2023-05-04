@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Procedure</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+  <h1> Enter a Procedure </h1>
+
+  <form action="/assign-procedure" method="POST">
+    <label>Username: </label>
+    <input placeholder="Username" type="text" name="username" id="username" required><br><br>
+    <label>Procedure: </label>
+    <input placeholder="Name" type="text" name="procedure" id="procedure" required><br><br>
+    <label>Email: </label>
+    <input placeholder="name@server.com" type="text" name="email" id="email" required><br><br>
+    <input type="submit" name="assign-procedure"><br><br>
+    <a href="{{url_for('login')}}">Return to Login</a>
+    {% if msg %}
+        <p>{{ msg }}</p>
+    {% endif %}
+  </form>
+</body>
+</html>

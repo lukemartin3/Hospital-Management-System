@@ -46,6 +46,7 @@
                 <li><a href="{{url_for('manage_beds')}}">Create/Delete Bed</a></li>
                 <li><a href="{{url_for('billing_rates')}}">Billing Rates</a></li>
                 <li><a href="{{url_for('invoice_patient')}}">Invoice Patient</a></li>
+                <li><a href="{{url_for('assign_procedure')}}">Assign Procedure</a></li>
             {% elif session.get("role") == 2 %}
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
             {% elif session.get("role") == 3 %}
