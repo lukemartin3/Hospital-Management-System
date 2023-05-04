@@ -65,7 +65,7 @@ def assign_roles():
                 msg = 'Successfully created Physician!'
         else:
             msg = 'Username not found'
-    return render_template('assign.html', msg=msg)
+    return render_template('assign-role.html', msg=msg)
 
 
 @app.route("/login", methods=["POST", "GET"])
