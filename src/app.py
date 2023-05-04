@@ -406,6 +406,64 @@ def invoice_patient():
         users[0].update(extras[0])
     return render_template('invoice-patient.html', users=users, msg=msg)
 
+def Merge(dict1, dict2):
+    return(dict2.update(dict1))
+
+@app.route('/assign-procedure', methods=['GET', 'POST'])    
+def assign_procedure():
+    msg = ''
+    if request.method == "POST":
+        username = request.form.get('username')
+        proced = request.form.get('procedure')
+        email = request.form.get('email')
+        mycursor.execute('SELECT rate FROM billing_rates WHERE procedures=%s', (proced,))
+        price = mycursor.fetchall()
+        print(price[0][0])
+        if price:
+            mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)', (username, proced, price[0][0], email))
+            con.commit()
+            msg = "Successfully added procedure for user."
+        else:
+            msg = "Incorrect username, procedure, or email. Please verify the information entered is correct."
+    return render_template('assign-procedure.html', msg=msg)
+
+
+#
+# @app.route('/make-payment', methods=['GET', 'POST'])
+# def make_payment():
+#     msg=''
+#     billing=[]
+#     if session.get("role") != 1:
+#         return redirect("/login")
+#     if request.method == 'POST':
+#         mycursor.execute('SELECT billing FROM users WHERE username=%', (session['username'],))
+#         record = mycursor.fetchone()
+#         if record:
+
+
+# @app.route("/discharge-patient", methods=['POST', 'GET'])
+# def discharge_patient():
+#     msg=''
+#     beds=[]
+#     print(session.get("role"))
+#     if session.get("role") != 3:
+#         return redirect("/login")
+#     if request.method == 'POST':
+#         search_text = request.form['search_text']
+#         mycursor.execute('SELECT * FROM beds WHERE pat_username=%s',
+#                          (f'%{search_text}%',))
+#         record = mycursor.fetchall()
+#         if record:
+#             beds = [{'bed_id': row[0], 'pat_username': row[2]}
+#                     for row in record]
+#         else:
+#             msg = "no patients found"
+#         if request.method == 'POST':
+#             bed_id = request.form.get('bed_id')
+#             mycursor.execute('UPDATE beds SET pat_username=NULL WHERE bed_id=%s', (bed_id,))
+#             con.commit()
+#             msg = 'Successfully discharged patient'
+#     return render_template("discharge-patient.html", beds=beds, msg=msg)
 
 def run_app(debug=True):
     app.run(debug=debug)
