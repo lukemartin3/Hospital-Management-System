@@ -47,6 +47,23 @@
             margin-right: 5px;
             margin-left: 25px;
         }
+        form {
+            text-align: center;
+        }
+        .payment-info {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            width: 450px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -54,23 +71,25 @@
     <ul>
         <li><a href="{{url_for('logout')}}">Logout</a></li>
         <li><a href="{{url_for('home')}}">Home</a></li>
-    </ul><br><br><br>
+    </ul><br>
         <form action="{{url_for('make_payment')}}" method="post">
+            <h2>Bill Due:</h2>
             <div class="container">
-                <h2>Bill Due:</h2>
-                <h3>${{billing}}</h3>
-                <div class="input-row">
-                    <label>Card Number</label>
-                    <input type="text" placeholder="1234 1234 1234 1234" maxlength="15" required>
-                </div><br>
-                <div class="input-row">
-                    <label>Expiration</label>
-                    <input type="text" class="exp-input" placeholder="MM/YY" maxlength="5" required>
-                    <label>CVC</label>
-                    <input type="text" class="cvc-input" placeholder="123" maxlength="3" required>
-                    <label>Postal Code</label>
-                    <input type="text" class="postal-input" placeholder="12345" maxlength="5" required>
-                </div><br>
+                <div class="payment-info">
+                    <h3>${{billing}}</h3>
+                    <div class="input-row">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="1234 1234 1234 1234" maxlength="15" required>
+                    </div><br>
+                    <div class="input-row">
+                        <label>Expiration</label>
+                        <input type="text" class="exp-input" placeholder="MM/YY" maxlength="5" required>
+                        <label>CVC</label>
+                        <input type="text" class="cvc-input" placeholder="123" maxlength="3" required>
+                        <label>Postal Code</label>
+                        <input type="text" class="postal-input" placeholder="12345" maxlength="5" required>
+                    </div><br>
+                </div>
                 <input type="submit" value="Submit"><br>
                 {% if msg %}
                     <p>{{ msg }}</p>
