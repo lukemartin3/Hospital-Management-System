@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '5crNoOdN1331'
+__PASSWORD = 'Topher1028'
 __DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -152,8 +152,6 @@ def forgot_password():
         send_pin = mycursor.fetchone()
         mycursor.execute('SELECT email FROM users WHERE username=%s AND email=%s', (username, email))
         send_email = mycursor.fetchone()
-
-       
         if record:
             session['loggedin'] = True
             session['username'] = username
@@ -239,9 +237,9 @@ def see_appointments():
     if not session.get("username"):
         return redirect("/login")
     if request.method == "POST":
-        user = 'NULL'
+        username = 'NULL'
         appointment_id = request.form.get('appointment_id')
-        mycursor.execute('UPDATE appointments SET pat_username=%s WHERE appt_id=%s', (user, appointment_id,))
+        mycursor.execute('UPDATE appointments SET pat_username=%s WHERE appt_id=%s', (username, appointment_id,))
         con.commit()
         msg = 'Successfully deleted appointment'
     else:
@@ -304,6 +302,7 @@ def see_accounts():
 @app.route("/manage-beds", methods=['POST', 'GET'])
 def manage_beds():
     msg = ''
+    beds=[]
     if session.get("role") != 0:
         return redirect("/login")
     if request.method == 'POST':
@@ -325,7 +324,15 @@ def manage_beds():
                 msg = 'Deleted bed number'
             else:
                 msg = 'Bed number is not found'
-    return render_template("manage-beds.html", msg=msg)
+    else:
+        mycursor.execute('SELECT * FROM beds')
+        records = mycursor.fetchall()
+        if records:
+            beds = [{'bed_id': row[0], 'available': row[1], 'pat_username': row[2]}
+                    for row in records]
+        else:
+            msg = "No beds found"
+    return render_template("manage-beds.html", beds=beds, msg=msg)
 
 
 @app.route("/assign-bed", methods=['POST', 'GET'])
@@ -351,37 +358,14 @@ def assign_bed():
             msg = "No users found"
     return render_template("assign-bed.html", beds=beds, msg=msg)
 
-#
-# ADMIN FUNCTIONS 
-#
 
-@app.route("/admin")
-def admin():
-    if not session.get("username"):
-        return redirect("/login")
-    if session['username'] != 'admin':
-        return redirect("/")
-    return render_template("admin.html")
-
-
-@app.route("/discharge-patient", methods=['POST', 'GET'])
-def discharge_patient():
-    msg=''
-    beds=[]
-    if session.get("role") != 3:
-        return redirect("/login")
-    mycursor.execute('SELECT username FROM users')
-    result = mycursor.fetchall()
-    usernames = [row[0] for row in result]
-    return render_template("see-patients.html", usernames=usernames)
-
-@app.route('/billing-rates', methods=['GET', 'POST'])    
+@app.route('/billing-rates', methods=['GET', 'POST'])
 def billing_rates():
     msg = ''
     # Check if user is logged in and is an admin
-    if 'username' not in session or session['username'] != 'admin':
-        return redirect(url_for('login'))
-    # Fetch current billing rates    
+    if session.get("role") != 0:
+        return redirect("/login")
+    # Fetch current billing rates
     if request.method == 'POST':
         if 'new_procedure' in request.form and 'new_rate' in request.form:
             procedure = request.form['new_procedure']
@@ -397,11 +381,11 @@ def billing_rates():
                 mycursor.execute('INSERT INTO billing_rates (procedures, rate) VALUES (%s, %s)', (procedure, rate))
                 msg = 'Procedure has been added'
             con.commit()
-    mycursor.execute('SELECT * FROM billing_rates')    
+    mycursor.execute('SELECT * FROM billing_rates')
     billing_rates = mycursor.fetchall()
     return render_template('billing-rates.html', billing_rates = billing_rates, msg = msg)
 
-@app.route('/invoice_patient', methods=['GET', 'POST'])    
+@app.route('/invoice_patient', methods=['GET', 'POST'])
 def invoice_patient():
     msg = ''
     users = []
@@ -421,27 +405,6 @@ def invoice_patient():
             msg = "No users found"
         users[0].update(extras[0])
     return render_template('invoice-patient.html', users=users, msg=msg)
-
-def Merge(dict1, dict2):
-    return(dict2.update(dict1))
-
-@app.route('/assign-procedure', methods=['GET', 'POST'])    
-def assign_procedure():
-    msg = ''
-    if request.method == "POST":
-        username = request.form.get('username')
-        proced = request.form.get('procedure')
-        email = request.form.get('email')
-        mycursor.execute('SELECT rate FROM billing_rates WHERE procedures=%s', (proced,))
-        price = mycursor.fetchall()
-        print(price[0][0])
-        if price:
-            mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)', (username, proced, price[0][0], email))
-            con.commit()
-            msg = "Successfully added procedure for user."
-        else:
-            msg = "Incorrect username, procedure, or email. Please verify the information entered is correct."
-    return render_template('assign-procedure.html', msg=msg)
 
 
 def run_app(debug=True):
