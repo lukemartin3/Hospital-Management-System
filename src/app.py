@@ -392,16 +392,11 @@ def invoice_patient():
         username = request.form.get('username')
         mycursor.execute('SELECT * FROM invoice WHERE username=%s', (username,))
         record = mycursor.fetchall()
-        mycursor.execute('SELECT * FROM users WHERE username=%s', (username,))
-        record2 = mycursor.fetchall()
-        if record2:
-            extras = [{'fname': i[3], 'lname': i[4], 'phone': i[7], 'address': i[8], 'city': i[9], 'state': i[10], 'zip': i[11]}
-                     for i in record2]
         if record:
             users = [{'username': row[0], 'procedure_name': row[1], 'price': row[2], 'email': row[3]}
                      for row in record]
         else:
-            msg = "No users found"
+            msg = "No invoices found for username"
     return render_template('admin/invoice-patient.html', users=users, msg=msg)
 
 
