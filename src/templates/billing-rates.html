@@ -36,6 +36,14 @@
             align-items: center;
             margin-top: 10px;
         }
+        .procedure-info {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -69,14 +77,16 @@
                 <th>Price</th>
               </tr>
             </thead>
-            <tbody>
-              {% for procedure in billing_rates %}
-              <tr>
-                <td>{{ procedure[0] }}</td>
-                <td>${{ procedure[1] }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
+            <div class="procedure-info">
+                <tbody>
+                  {% for procedure in billing_rates %}
+                      <tr>
+                        <td>{{ procedure[0] }}</td>
+                        <td>${{ procedure[1] }}</td>
+                      </tr>
+                  {% endfor %}
+                </tbody>
+            </div>
           </table>
     </div>
 </body>
