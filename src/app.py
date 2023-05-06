@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = 'Topher1028'
+__PASSWORD = '5crNoOdN1331'
 __DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -391,7 +391,7 @@ def invoice_patient():
     users = []
     if request.method == "POST":
         username = request.form.get('username')
-        mycursor.execute('SELECT * FROM invoice WHERE username=%s', (username,))
+        mycursor.execute('SELECT username, procedure_name, SUM(price) as price, email FROM invoice WHERE username=%s group by username', (username,))
         record = mycursor.fetchall()
         if record:
             users = [{'username': row[0], 'procedure_name': row[1], 'price': row[2], 'email': row[3]}
