@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '5crNoOdN1331'
+__PASSWORD = '871056'
 __DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -54,7 +54,8 @@ def assign_roles():
             specialty = request.form.get('specialty')
         else:
             None
-        record = mycursor.execute('SELECT * FROM users WHERE username=%s', (username,))
+        mycursor.execute('SELECT * FROM users WHERE username=%s', (username,))
+        record = mycursor.fetchone()
         if record:
             mycursor.execute('UPDATE users SET roles=%s, specialization=%s WHERE username=%s', (role, specialty,
                                                                                                 username))
@@ -390,7 +391,7 @@ def invoice_patient():
     users = []
     if request.method == "POST":
         username = request.form.get('username')
-        mycursor.execute('SELECT username, procedure_name, SUM(price) as price, email FROM invoice WHERE username=%s group by username', (username,))
+        mycursor.execute('SELECT username, procedure_name, SUM(price) as price, email FROM invoice WHERE username=%s GROUP BY username, procedure_name, email', (username,))
         record = mycursor.fetchall()
         if record:
             users = [{'username': row[0], 'procedure_name': row[1], 'price': row[2], 'email': row[3]}
@@ -416,7 +417,9 @@ def assign_procedure():
             msg = "Successfully added procedure for user."
         else:
             msg = "Incorrect username, procedure, or email. Please verify the information entered is correct."
-    return render_template('admin/assign-procedure.html', msg=msg)
+    mycursor.execute('SELECT * FROM billing_rates')
+    billing_rates = mycursor.fetchall()
+    return render_template('admin/assign-procedure.html', msg=msg, billing_rates=billing_rates)
 
 
 @app.route('/make-payment', methods=['GET', 'POST'])
