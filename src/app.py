@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = 'Topher1028'
+__PASSWORD = '871056'
 __DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -187,8 +187,9 @@ def reset():
         if password != confirm_pass:
             msg="Passwords do not match"
         else:
+            hashedPassword = generate_password_hash(password)
             mycursor.execute('UPDATE users SET password = %s WHERE username = %s',
-                                (password, username))
+                                (hashedPassword, username))
             con.commit()
             session['loggedin'] = True
             session['username'] = username  #record[0]
