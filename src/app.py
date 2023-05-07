@@ -32,7 +32,7 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
 con = mysql.connector.connect(host=__HOST, user=__USERNAME, password=__PASSWORD, database=__DATABASE)
-mycursor = con.cursor()
+mycursor = con.cursor(buffered=True)
 
 
 @app.route("/")
@@ -410,7 +410,6 @@ def assign_procedure():
         email = request.form.get('email')
         mycursor.execute('SELECT rate FROM billing_rates WHERE procedures=%s', (proced,))
         price = mycursor.fetchall()
-        print(price[0][0])
         if price:
             mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)',
                              (username, proced, price[0][0], email))
@@ -426,18 +425,20 @@ def assign_procedure():
 @app.route('/make-payment', methods=['GET', 'POST'])
 def make_payment():
     msg=''
-    billing=[]
+    billing=0.00
     if session.get("role") != 1:
         return redirect("/login")
     if request.method == 'POST':
         mycursor.execute('UPDATE invoice SET price=0.00 WHERE username=%s', (session['username'],))
         con.commit()
+        mycursor.execute('DELETE FROM invoice WHERE username=%s', (session['username'],))
+        con.commit()
         msg = "Payment Success!"
     else:
-        mycursor.execute('SELECT price FROM invoice WHERE username=%s', (session['username'],))
-        record = mycursor.fetchone()
+        mycursor.execute('SELECT SUM(price) FROM invoice WHERE username=%s', (session['username'],))
+        record = mycursor.fetchone()[0]
         if record:
-            billing = "{:.2f}".format(record[0])
+            billing = "{:.2f}".format(record)
     return render_template("patient/make-payment.html", billing=billing, msg=msg)
 
 
