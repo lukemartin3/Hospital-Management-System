@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 __HOST = 'localhost'
 __USERNAME = 'root'
-__PASSWORD = '871056'
+__PASSWORD = 'Topher1028'
 __DATABASE = 'fsedb'
 
 app.config['SECRET_KEY'] = "debug key" 
@@ -390,16 +390,15 @@ def billing_rates():
 def invoice_patient():
     msg = ''
     users = []
-    if request.method == "POST":
-        username = request.form.get('username')
-        mycursor.execute('SELECT username, procedure_name, SUM(price) as price, email FROM invoice WHERE username=%s GROUP BY username, procedure_name, email', (username,))
-        record = mycursor.fetchall()
-        if record:
-            users = [{'username': row[0], 'procedure_name': row[1], 'price': row[2], 'email': row[3]}
-                     for row in record]
-        else:
-            msg = "No invoices found for username"
-    return render_template('admin/invoice-patient.html', users=users, msg=msg)
+    mycursor.execute('SELECT username, procedure_name, SUM(price) as price, email FROM invoice WHERE username=%s '
+                     'GROUP BY username, procedure_name, email', (session['username'],))
+    record = mycursor.fetchall()
+    if record:
+        users = [{'username': row[0], 'procedure_name': row[1], 'price': row[2], 'email': row[3]}
+                 for row in record]
+    else:
+        msg = "No invoices found for username"
+    return render_template('patient/invoice-patient.html', users=users, msg=msg)
 
 
 @app.route('/assign-procedure', methods=['GET', 'POST'])    
@@ -413,7 +412,8 @@ def assign_procedure():
         price = mycursor.fetchall()
         print(price[0][0])
         if price:
-            mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)', (username, proced, price[0][0], email))
+            mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)',
+                             (username, proced, price[0][0], email))
             con.commit()
             msg = "Successfully added procedure for user."
         else:
@@ -430,13 +430,14 @@ def make_payment():
     if session.get("role") != 1:
         return redirect("/login")
     if request.method == 'POST':
-        mycursor.execute('UPDATE users SET billing=0.00 WHERE username=%s', (session['username'],))
+        mycursor.execute('UPDATE invoice SET price=0.00 WHERE username=%s', (session['username'],))
         con.commit()
         msg = "Payment Success!"
     else:
-        mycursor.execute('SELECT billing FROM users WHERE username=%s', (session['username'],))
+        mycursor.execute('SELECT price FROM invoice WHERE username=%s', (session['username'],))
         record = mycursor.fetchone()
-        billing = "{:.2f}".format(record[0])
+        if record:
+            billing = "{:.2f}".format(record[0])
     return render_template("patient/make-payment.html", billing=billing, msg=msg)
 
 
@@ -450,10 +451,6 @@ def notification():
         message = request.form.get('message')
         role = request.form.get('role')
         lname = request.form.get('lname')
-        print(pat_username)
-        print(message)
-        print(role)
-        print(lname)
         sender = role + ' ' + lname
         mycursor.execute('INSERT INTO notification (pat_username, message, sender) VALUES (%s, %s, %s)',
                          (pat_username, message, sender))
