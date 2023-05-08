@@ -72,7 +72,9 @@
                 <p>Username: {{ user['username'] }}</p>
                 <p>Email: {{ user['email'] }}</p>
                 <p>Procedure: {{ user['procedure_name'] }}</p>
-                <p>Amount Owed: ${{ user['price'] }}</p>
+                <p>Original Amount: ${{ user['original_price'] }}</p>
+                <p>Insurance pays: ${{ user['discount_rate'] }}</p>
+                <p>Total Amount Owed: ${{ user['total_price'] }}</p>
             </div>
             {% endfor %}
         </div>
