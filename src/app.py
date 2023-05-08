@@ -479,10 +479,13 @@ def notification():
         role = request.form.get('role')
         lname = request.form.get('lname')
         sender = role + ' ' + lname
-        mycursor.execute('INSERT INTO notification (pat_username, message, sender) VALUES (%s, %s, %s)',
-                         (pat_username, message, sender))
-        con.commit()
-        msg = "Notification message successfully sent to Patient"
+        try:
+            mycursor.execute('INSERT INTO notification (pat_username, message, sender) VALUES (%s, %s, %s)',
+                             (pat_username, message, sender))
+            con.commit()
+            msg = "Notification message successfully sent to Patient"
+        except:
+            msg = 'Your message is too long'
     return render_template("all/notification.html", msg=msg)
 
 
