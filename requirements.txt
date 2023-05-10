@@ -5,10 +5,15 @@ docutils==0.17.1
 html5lib==1.1
 httplib2==0.20.2
 Flask==2.2.3
+Flask-Bcrypt==0.7.1
+Flask-Mail==0.9.1
+flask_mysqldb==1.0.1
+flask_testing==0.8.1
 flask-session==0.4.0
 jsonpickle==2.2.0
 jsonschema==3.2.0
 mysqlclient==2.1.1
+mysql-connector-python==8.0.32
 numpy==1.24.2
 pickleshare==0.7.5
 pytest==7.3.0
@@ -16,6 +21,3 @@ sqlparse==0.4.2
 tox==4.4.5
 urllib3==1.26.5
 virtualenv==20.19.0
-mysql-connector-python==8.0.32
-Flask-Bcrypt==0.7.1
-Flask-Mail==0.9.1
