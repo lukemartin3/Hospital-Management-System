@@ -404,8 +404,8 @@ def assign_bed():
 def billing_rates():
     msg = ''
     # Check if user is logged in and is an admin
-    if session.get("role") != 0:
-        return redirect("/login")
+    if session.get("role") == 1:
+        return redirect("/")
     # Fetch current billing rates
     if request.method == 'POST':
         if 'new_procedure' in request.form and 'new_rate' in request.form:
