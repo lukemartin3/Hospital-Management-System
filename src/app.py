@@ -29,6 +29,8 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
+INSURANCE = ['Blue Cross Blue Shield','United', 'Anthem']
+
 con = mysql.connector.connect(host=__HOST, user=__USERNAME, password=__PASSWORD, database=__DATABASE)
 mycursor = con.cursor(buffered=True)
 
@@ -225,8 +227,9 @@ def reset():
         if password != confirm_pass:
             msg="Passwords do not match"
         else:
+            hashedPassword = generate_password_hash(password)
             mycursor.execute('UPDATE users SET password = %s WHERE username = %s',
-                                (password, username))
+                                (hashedPassword, username))
             con.commit()
             session['loggedin'] = True
             session['username'] = username  #record[0]
@@ -428,12 +431,19 @@ def billing_rates():
 def invoice_patient():
     msg = ''
     users = []
+    discount_rate = 0.0
     mycursor.execute('SELECT username, procedure_name, SUM(price) as price, email FROM invoice WHERE username=%s '
                      'GROUP BY username, procedure_name, email', (session['username'],))
     record = mycursor.fetchall()
     if record:
-        users = [{'username': row[0], 'procedure_name': row[1], 'price': row[2], 'email': row[3]}
-                 for row in record]
+        for row in record:
+            username, procedure_name, total_price, email = row
+            mycursor.execute('SELECT rate FROM billing_rates WHERE procedures=%s', (procedure_name,))
+            billing_record = mycursor.fetchone()
+            if billing_record:
+                original_price = billing_record[0]
+                discount_rate = original_price - total_price
+                users.append({'username': username, 'procedure_name': procedure_name, 'original_price': original_price, 'total_price': total_price, 'email': email, 'discount_rate': discount_rate})
     else:
         msg = "No invoices found for username"
     return render_template('patient/invoice-patient.html', users=users, msg=msg)
@@ -442,17 +452,33 @@ def invoice_patient():
 @app.route('/assign-procedure', methods=['GET', 'POST'])    
 def assign_procedure():
     msg = ''
+    discount_rate = 0.0
     if request.method == "POST":
         username = request.form.get('username')
         proced = request.form.get('procedure')
         email = request.form.get('email')
+        mycursor.execute('SELECT insurance FROM users WHERE username=%s', (username,))
+        insurance = mycursor.fetchone()
         mycursor.execute('SELECT rate FROM billing_rates WHERE procedures=%s', (proced,))
         price = mycursor.fetchall()
+        print(price)
         if price:
-            mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)',
+            #Has insurance, discount the price
+            if insurance and insurance[0] in INSURANCE:
+                discount_rate = 0.8 #20% discount from insurance
+                old_price = price[0][0]
+                new_price = old_price * discount_rate
+                price[0] = new_price
+                mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)',
+                             (username, proced, price[0], email))
+                con.commit()
+                msg = 'Successfully added procedure for user with insurance'
+            #No insurance, do as normal
+            else:
+                mycursor.execute('INSERT INTO invoice (username, procedure_name, price, email) VALUES (%s, %s, %s, %s)',
                              (username, proced, price[0][0], email))
-            con.commit()
-            msg = "Successfully added procedure for user."
+                con.commit()
+                msg = "Successfully added procedure for user."
         else:
             msg = "Incorrect username, procedure, or email. Please verify the information entered is correct."
     mycursor.execute('SELECT * FROM billing_rates')
@@ -491,10 +517,20 @@ def notification():
         role = request.form.get('role')
         lname = request.form.get('lname')
         sender = role + ' ' + lname
-        mycursor.execute('INSERT INTO notification (pat_username, message, sender) VALUES (%s, %s, %s)',
-                         (pat_username, message, sender))
-        con.commit()
-        msg = "Notification message successfully sent to Patient"
+        mycursor.execute('SELECT * FROM users WHERE username=%s',
+                        (pat_username,))
+        record = mycursor.fetchone()
+        if record:
+
+            try:
+                mycursor.execute('INSERT INTO notification (pat_username, message, sender) VALUES (%s, %s, %s)',
+                                 (pat_username, message, sender))
+                con.commit()
+                msg = "Notification message successfully sent to Patient"
+            except:
+                msg = 'Your message is too long'
+        else:
+            msg = 'Invalid patient'
     return render_template("all/notification.html", msg=msg)
 
 
